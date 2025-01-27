@@ -1,32 +1,14 @@
-# create-t3-turbo
-
-> [!NOTE]
->
-> NextAuth setup now works for Expo app!
-
-> [!NOTE]
->
-> OAuth deployments are now working for preview deployments. Read [deployment guide](https://github.com/t3-oss/create-t3-turbo#auth-proxy) and [check out the source](./apps/auth-proxy) to learn more!
+# onesky-app
+A TypeScript monorepo for the OneSky platform, housing the web (Next.js), mobile (Expo/React Native), and backend (Node.js REST) services. Supports seamless development and deployment for web, iOS, and Android apps.  More at oneskycollective.org.
 
 ## Installation
 
-> [!NOTE]
->
-> Make sure to follow the system requirements specified in [`package.json#engines`](./package.json#L4) before proceeding.
-
-There are two ways of initializing an app using the `create-t3-turbo` starter. You can either use this repository as a template:
-
-![use-as-template](https://github.com/t3-oss/create-t3-turbo/assets/51714798/bb6c2e5d-d8b6-416e-aeb3-b3e50e2ca994)
-
-or use Turbo's CLI to init your project (use PNPM as package manager):
-
+Created using create-t3-turbo repo.
 ```bash
 npx create-turbo@latest -e https://github.com/t3-oss/create-t3-turbo
 ```
 
 ## About
-
-Ever wondered how to migrate your T3 application into a monorepo? Stop right here! This is the perfect starter repo to get you running with the perfect stack!
 
 It uses [Turborepo](https://turborepo.org) and contains:
 
@@ -90,11 +72,18 @@ pnpm i
 # There is an `.env.example` in the root directory you can use for reference
 cp .env.example .env
 
-# Push the Drizzle schema to the database
+# Push the Drizzle schema to the database (This is not required only the first time you are setting up tables in db)
 pnpm db:push
 ```
 
-### 2. Configure Expo `dev`-script
+### Build
+```pnpm build
+```
+
+### run
+```
+pnpm dev
+```
 
 #### Use iOS Simulator
 
@@ -120,7 +109,7 @@ pnpm db:push
 
 3. Run `pnpm dev` at the project root folder.
 
-### 3. Configuring Next-Auth to work with Expo
+### 3. Configuring Next-Auth to work with Expo (For mobile apps)
 
 In order to get Next-Auth to work with Expo, you must either:
 
