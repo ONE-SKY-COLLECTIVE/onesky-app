@@ -1,8 +1,8 @@
 {
   "cli": {
     "version": ">= 4.1.2"
-  },
-  "build": {
+},
+"build": {
     "base": {
       "node": "22.12.0",
       "pnpm": "9.15.4",
@@ -24,7 +24,19 @@
     },
     "production": {
       "extends": "base"
-    }
+    },
+    "ios-simulator": {
+      "extends": "development",
+      "ios": {
+        "simulator": true
+      }
+    },
+    "development-simulator": {
+      "extends": "development",
+      "ios": {
+        "simulator": true
+      }
+    },
   },
   "submit": {
     "production": {}
