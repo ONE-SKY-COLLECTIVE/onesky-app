@@ -3,7 +3,8 @@ import type { ConfigContext, ExpoConfig } from "expo/config";
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "expo",
-  slug: "expo",
+  slug: "onesky-app",
+  owner: "onesky",
   scheme: "expo",
   version: "0.1.0",
   orientation: "portrait",
@@ -19,8 +20,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   assetBundlePatterns: ["**/*"],
   ios: {
-    bundleIdentifier: "your.bundle.identifier",
+    bundleIdentifier: "onesky-app",
     supportsTablet: true,
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false
+    }
   },
   android: {
     package: "your.bundle.identifier",
@@ -29,11 +33,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: "#1F104A",
     },
   },
-  // extra: {
-  //   eas: {
-  //     projectId: "your-eas-project-id",
-  //   },
-  // },
+  extra: {
+     eas: {
+       projectId: "0e3d9225-a919-4938-ad82-ac76fa8921d0",
+     },
+  },
   experiments: {
     tsconfigPaths: true,
     typedRoutes: true,
