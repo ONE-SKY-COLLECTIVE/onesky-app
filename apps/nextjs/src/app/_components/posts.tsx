@@ -15,6 +15,7 @@ import {
 import { Input } from "@acme/ui/input";
 import { toast } from "@acme/ui/toast";
 
+
 import { api } from "~/trpc/react";
 
 export function CreatePostForm() {
@@ -81,6 +82,17 @@ export function CreatePostForm() {
 
 export function PostList() {
   const [posts] = api.post.all.useSuspenseQuery();
+  // const [activity] = api.activity.all.useSuspenseQuery();
+
+  
+  // type ActivityType = {
+  //   id: string;
+  //   userId: string;
+  //   date: string;
+  //   type: string;
+  //   limitPerDay: number;
+  // }
+  
 
   if (posts.length === 0) {
     return (
