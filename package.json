@@ -26,9 +26,13 @@
   "devDependencies": {
     "@acme/prettier-config": "workspace:*",
     "@turbo/gen": "^2.3.4",
+    "drizzle-kit": "^0.30.2",
     "prettier": "catalog:",
     "turbo": "^2.3.4",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@acme/prettier-config",
+  "dependencies": {
+    "vitest": "^3.0.5"
+  }
 }
