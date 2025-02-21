@@ -51,7 +51,7 @@ export const CreateActivitySchema = createInsertSchema(Activity, {
 
 export type CreateActivityType = z.infer<typeof CreateActivitySchema>;
 
-export const RefillWaterContainer = pgTable("refill_water_coontainer", (t) => ({  
+export const RefillWaterContainer = pgTable("refill_water_container", (t) => ({  
   id: t.uuid().notNull().primaryKey().defaultRandom(),
   proofUrl: t.varchar({ length: 255 }).notNull(),
   activityId: t.uuid().notNull().references(() => Activity.id, {onDelete: "cascade"}),
@@ -71,9 +71,9 @@ export const UserRelations = relations(User, ({ many }) => ({
 }));
 
 export const activitiesRelations = relations(Activity, ({one}) => ({   
-  RefillBottle: one(RefillWaterContainer, {
+  RefillWaterContainer: one(RefillWaterContainer, {
     fields: [Activity.id],
-    references: [RefillWaterContainer.id]
+    references: [RefillWaterContainer.activityId]
   }),
 }));
 
