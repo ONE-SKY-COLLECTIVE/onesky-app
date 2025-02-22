@@ -48,3 +48,92 @@
     --ring: 240 4.9% 83.9%;
   }
 }
+
+.activity{
+  background-color: #9DE5F2;
+}
+
+.home-page{
+  height: 100vh;
+  background-color: #9DE5F2;
+
+}
+
+.title{
+  font-size: 25px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.flex{
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-v{
+  display: flex;
+  flex-direction: column;
+}
+
+.justify-between{
+  justify-content: space-between;
+}
+
+.text-13{
+  font-size: 13px;
+}
+
+.half-width {
+  width: 60%;
+}
+
+.fit-height {
+  height: fit-content;
+}
+
+.main-content{
+  background-color: #FAFAFA;
+  flex-grow: 1;
+  height: 50;
+  border-top-right-radius: 40px;
+  border-top-left-radius: 40px;
+  padding: 5%;
+  width: 100%;
+}
+
+.activity-box {
+  background-color: #D9EBB2;
+  height: 139px;
+  width: 48%;
+  border-radius: 10px;
+}
+
+.header{
+  width: 100vw;
+  height: 14vh;
+  background-color: #D8F5FA;
+  border-radius: 35;
+  display: flex;
+  justify-content: flex-end;
+  padding: 5%;
+  box-sizing: border-box;
+}
+
+.waterbottle-page {
+  background-color: #F5FAEB;
+  height: 100vh;
+  width: 100vw;
+}
+
+.hold-waterbottle-text {
+  height: 30vh;
+  font-size: 22px;
+  padding-inline: auto;
+  padding-top: 30%;
+  padding-bottom: 30%;
+}
+
+.waterbottle-text {
+  text-align: center;
+  font-size: 22px;
+}
