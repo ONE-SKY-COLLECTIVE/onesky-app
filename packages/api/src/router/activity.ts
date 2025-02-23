@@ -1,14 +1,22 @@
 import { Activity } from "@acme/db/schema";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { eq } from "@acme/db";
+import { and, eq } from "@acme/db";
 import { z } from "zod";
 
 export const activityRouter = createTRPCRouter({
   getActivityByType: publicProcedure
     .input(z.string())
     .query(({ctx, input}) => {
+      if (!ctx.session) {
+        throw new Error('You must be logged in to access this resource');
+      }
+      const userId = ctx.session.user.id;
+      
       return ctx.db.query.Activity.findMany({
-        where: eq(Activity.type, input),
+        where: and(
+          eq(Activity.type, input),
+          eq(Activity.userId, userId)
+        ),
         with: {
           RefillWaterContainer: true
         }
