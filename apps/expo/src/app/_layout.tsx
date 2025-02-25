@@ -1,4 +1,6 @@
 import "@bacons/text-decoder/install";
+import { Text } from 'react-native';
+
 
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -12,6 +14,8 @@ import "../styles.css";
 // It wraps your pages with the providers they need
 export default function RootLayout() {
   const { colorScheme } = useColorScheme();
+
+  
   return (
     <TRPCProvider>
       {/*

@@ -126,6 +126,7 @@ export default function Index() {
     onSettled: () => utils.post.all.invalidate(),
   });
 
+
   return (
     <SafeAreaView className="bg-background">
       {/* Changes page title visible on the header */}
