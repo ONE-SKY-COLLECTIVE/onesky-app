@@ -33,6 +33,7 @@
   },
   "prettier": "@acme/prettier-config",
   "dependencies": {
+    "react-social-media-embed": "^2.5.18",
     "vitest": "^3.0.5"
   }
 }
