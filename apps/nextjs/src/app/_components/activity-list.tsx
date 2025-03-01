@@ -1,11 +1,10 @@
-"use client";
-
-import { InstagramEmbed } from "react-social-media-embed";
+"use client"
 import { useSession } from "next-auth/react";
 
 import type { RouterOutputs } from "@acme/api";
 
 import { api } from "~/trpc/react";
+import { ActivityProof } from "./ActivityProof";
 
 export function ActivityList() {
   const { status } = useSession();
@@ -61,20 +60,14 @@ function ActivityCard(props: {
     <div className="flex flex-row rounded-lg bg-muted p-4">
       <div className="flex-grow">
         <h2 className="text-2xl font-bold text-primary">{activity.type}</h2>
+        <img src={activity.RefillWaterContainer.proofUrl} alt="Activity proof" />
         <p className="mt-2 text-sm">
           Date: {new Date(activity.date).toLocaleDateString()}
         </p>
         <p>Limit per day: {activity.limitPerDay}</p>
-        {activity.RefillWaterContainer.proofUrl &&
-          (console.log("aaaaa ",activity.RefillWaterContainer.proofUrl),
-          (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <InstagramEmbed
-                url={activity.RefillWaterContainer.proofUrl}
-                width={328}
-              />
-            </div>
-          ))}
+        {activity.RefillWaterContainer.proofUrl && (
+          <ActivityProof url={activity.RefillWaterContainer.proofUrl} />
+        )}
       </div>
     </div>
   );
