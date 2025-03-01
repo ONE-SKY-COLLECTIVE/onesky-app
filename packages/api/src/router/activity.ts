@@ -1,4 +1,4 @@
-import { Activity } from "@acme/db/schema";
+import { Activity, RefillWaterContainer } from "@acme/db/schema";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { and, eq } from "@acme/db";
 import { z } from "zod";
@@ -42,7 +42,39 @@ export const activityRouter = createTRPCRouter({
           RefillWaterContainer : true
         }
       });
-    })
+    }),
+
+  createRefillActivity: publicProcedure
+    .input(z.object({
+      proofUrl: z.string(),
+      limitPerDay: z.number(),
+      date: z.date(),
+    }))
+    .mutation(async ({ctx, input}) => {
+      if(!ctx.session){
+        throw new Error("You must be logged in to access this resource");
+      }
+
+      const [activity] = await ctx.db.insert(Activity).values({
+        userId: ctx.session.user.id,
+        type: "refill_water_container",
+        date: input.date,
+        limitPerDay: input.limitPerDay,
+      }).returning({
+        id: Activity.id,
+      });
+
+      if (!activity) {
+        throw new Error("Failed to create activity");
+      }
+
+      await ctx.db.insert(RefillWaterContainer).values({
+        proofUrl: input.proofUrl,
+        activityId: activity.id,
+      });
+
+      return activity;
+    }),
 });
 
 export type { Activity } from "@acme/db/schema";
