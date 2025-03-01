@@ -45,14 +45,10 @@ export function ActivityList() {
   );
 }
 
-interface RefillWaterContainer {
-  proofUrl: string;
-}
+type ActivityWithRefill = RouterOutputs["activity"]["getActivityByType"][number];
 
 function ActivityCard(props: {
-  activity: RouterOutputs["activity"]["getActivityByType"][number] & {
-    RefillWaterContainer?: RefillWaterContainer;
-  };
+  activity: ActivityWithRefill;
 }) {
   const { activity } = props;
 
@@ -60,12 +56,14 @@ function ActivityCard(props: {
     <div className="flex flex-row rounded-lg bg-muted p-4">
       <div className="flex-grow">
         <h2 className="text-2xl font-bold text-primary">{activity.type}</h2>
-        <img src={activity.RefillWaterContainer.proofUrl} alt="Activity proof" />
+        {activity.RefillWaterContainer?.proofUrl && (
+          <img src={activity.RefillWaterContainer.proofUrl} alt="Activity proof" />
+        )}
         <p className="mt-2 text-sm">
           Date: {new Date(activity.date).toLocaleDateString()}
         </p>
         <p>Limit per day: {activity.limitPerDay}</p>
-        {activity.RefillWaterContainer.proofUrl && (
+        {activity.RefillWaterContainer?.proofUrl && (
           <ActivityProof url={activity.RefillWaterContainer.proofUrl} />
         )}
       </div>

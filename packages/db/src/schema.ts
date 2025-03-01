@@ -53,13 +53,13 @@ export type CreateActivityType = z.infer<typeof CreateActivitySchema>;
 
 export const RefillWaterContainer = pgTable("refill_water_container", (t) => ({  
   id: t.uuid().notNull().primaryKey().defaultRandom(),
-  proofUrl: t.varchar({ length: 255 }).notNull(),
+  proofUrl: t.varchar({ length: 255 }),
   activityId: t.uuid().notNull().references(() => Activity.id, {onDelete: "cascade"}),
 
 }))
 
 export const CreateRefillWaterContainerSchema = createInsertSchema(RefillWaterContainer, {
-  proofUrl: z.string(),
+  proofUrl: z.string().optional(),
   activityId: z.string(),
 }).omit({
   id: true,

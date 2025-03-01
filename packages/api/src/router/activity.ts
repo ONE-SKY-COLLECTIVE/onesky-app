@@ -46,7 +46,7 @@ export const activityRouter = createTRPCRouter({
 
   createRefillActivity: publicProcedure
     .input(z.object({
-      proofUrl: z.string(),
+      proofUrl: z.string().optional(),
       limitPerDay: z.number(),
       date: z.date(),
     }))

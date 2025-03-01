@@ -30,6 +30,8 @@ const SOCIAL_MEDIA_EMBEDS: Record<EmbedType, EmbedComponent> = {
 };
 
 export function ActivityProof({ url, width = 328 }: ActivityProofProps) {
+    if (!url) return null;
+    
     const getEmbedType = (): EmbedType => {
         if (url.includes('instagram.com')) return 'instagram';
         if (url.includes('facebook.com')) return 'facebook';
