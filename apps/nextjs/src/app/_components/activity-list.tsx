@@ -20,9 +20,8 @@ export function ActivityList() {
     );
   }
 
-  const [activities] = api.activity.getActivityByType.useSuspenseQuery(
-    "refill_water_container",
-  );
+  // For now, just get refill water container activities since that's all we support
+  const [activities] = api.activity.getActivityByType.useSuspenseQuery("refill_water_container");
 
   if (activities.length === 0) {
     return (
@@ -51,21 +50,24 @@ function ActivityCard(props: {
   activity: ActivityWithRefill;
 }) {
   const { activity } = props;
+  const container = activity.RefillWaterContainer;
 
   return (
     <div className="flex flex-row rounded-lg bg-muted p-4">
       <div className="flex-grow">
-        <h2 className="text-2xl font-bold text-primary">{activity.type}</h2>
-        {activity.RefillWaterContainer?.proofUrl && (
-          <img src={activity.RefillWaterContainer.proofUrl} alt="Activity proof" />
+        <h2 className="text-2xl font-bold text-primary">
+          Refill Water Container
+        </h2>
+        
+        {/* Display proof if available */}
+        {container && container.proofUrl && (
+          <ActivityProof url={container.proofUrl} />
         )}
+        
         <p className="mt-2 text-sm">
           Date: {new Date(activity.date).toLocaleDateString()}
         </p>
         <p>Limit per day: {activity.limitPerDay}</p>
-        {activity.RefillWaterContainer?.proofUrl && (
-          <ActivityProof url={activity.RefillWaterContainer.proofUrl} />
-        )}
       </div>
     </div>
   );
