@@ -1,33 +1,31 @@
 {
   "name": "@acme/db",
-  "version": "0.1.0",
   "private": true,
-  "type": "module",
+  "version": "0.1.0",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    },
-    "./client": {
-      "types": "./dist/client.d.ts",
-      "default": "./src/client.ts"
-    },
-    "./schema": {
-      "types": "./dist/schema.d.ts",
-      "default": "./src/schema.ts"
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./schema": "./src/schema.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
     }
   },
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
-    "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
-    "push": "pnpm with-env drizzle-kit push",
+    "clean": "rm -rf .turbo node_modules",
+    "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
+    "format:fix": "prettier --write \"**/*.{mjs,ts,md,json}\"",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "push": "drizzle-kit push",
     "studio": "pnpm with-env drizzle-kit studio",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
-    "with-env": "dotenv -e ../../.env --"
+    "with-env": "dotenv -e ../../.env --",
+    "db:migrate": "tsx src/migrations/index.ts"
   },
   "dependencies": {
     "@vercel/postgres": "^0.10.0",
@@ -36,14 +34,14 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
-    "dotenv-cli": "^8.0.0",
+    "@acme/eslint-config": "^0.1.0",
+    "@acme/typescript-config": "^0.1.0",
+    "dotenv-cli": "^7.3.0",
     "drizzle-kit": "^0.30.2",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "tsx": "^4.1.1"
   },
   "prettier": "@acme/prettier-config"
 }

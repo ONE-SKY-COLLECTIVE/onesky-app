@@ -1,10 +1,15 @@
-import { Activity, RefillWaterContainer } from "@acme/db/schema";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { TRPCError } from "@trpc/server";
 import { and, eq } from "@acme/db";
 import { z } from "zod";
 
+import {
+  Activity,
+  RefillWaterContainer,
+} from "@acme/db/schema";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
+
 // Define a type for the activity with optional RefillWaterContainer
-interface ActivityWithOptionalRefill {
+interface ActivityWithRefill {
   id: string;
   userId: string;
   date: Date;
@@ -18,157 +23,211 @@ interface ActivityWithOptionalRefill {
 }
 
 export const activityRouter = createTRPCRouter({
-  getActivityByType: publicProcedure
-    .input(z.string())
-    .query(({ctx, input}) => {
-      if (!ctx.session) {
-        throw new Error('You must be logged in to access this resource');
+  // Get refill activities only
+  getRefillActivities: protectedProcedure
+    .query(async ({ ctx }) => {
+      try {
+        return await ctx.db.query.Activity.findMany({
+          where: eq(Activity.type, "refill_water_container"),
+          with: {
+            RefillWaterContainer: true
+          }
+        });
+      } catch (error) {
+        console.error("Failed to fetch refill activities:", error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch activities'
+        });
       }
-      const userId = ctx.session.user.id;
-      
-      return ctx.db.query.Activity.findMany({
-        where: and(
-          eq(Activity.type, input),
-          eq(Activity.userId, userId)
-        ),
-        with: {
-          RefillWaterContainer: true
-        }
-      });
     }),
 
-  getUserActivities: publicProcedure
-    .query(async ({ ctx }) => {   
-      if (!ctx.session) {
-        throw new Error('You must be logged in to access this resource');
-      }
+  // Get activities by type
+  getActivityByType: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       
-      // Return all activities for the user with appropriate relations
-      // Only include RefillWaterContainer for refill_water_container activities
-      const activities = await ctx.db.query.Activity.findMany({
-        where: eq(Activity.userId, userId),
-      });
-      
-      // For refill activities, fetch the related RefillWaterContainer data
-      const refillActivities = activities.filter(
-        (activity) => activity.type === "refill_water_container"
-      );
-      
-      if (refillActivities.length > 0) {
-        const refillActivitiesWithContainer = await ctx.db.query.Activity.findMany({
+      try {
+        return await ctx.db.query.Activity.findMany({
           where: and(
-            eq(Activity.userId, userId),
-            eq(Activity.type, "refill_water_container")
+            eq(Activity.type, input),
+            eq(Activity.userId, userId)
           ),
           with: {
             RefillWaterContainer: true
           }
         });
-        
-        // Replace the refill activities with their enriched versions
-        const activityMap = new Map<string, ActivityWithOptionalRefill>();
-        
-        // First add all activities
-        for (const activity of activities) {
-          activityMap.set(activity.id, {
-            ...activity,
-            RefillWaterContainer: null
-          });
-        }
-        
-        // Then replace refill activities with their enriched versions
-        for (const activity of refillActivitiesWithContainer) {
-          activityMap.set(activity.id, activity as unknown as ActivityWithOptionalRefill);
-        }
-        
-        return Array.from(activityMap.values());
+      } catch (error) {
+        console.error(`Failed to fetch activities of type ${input}:`, error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch activities'
+        });
       }
+    }),
+
+  // Get all user activities
+  getUserActivities: protectedProcedure
+    .query(async ({ ctx }) => {   
+      const userId = ctx.session.user.id;
       
-      // If no refill activities, just return the basic activities
-      return activities.map(activity => ({ 
-        ...activity, 
-        RefillWaterContainer: null 
-      })) as ActivityWithOptionalRefill[];
-    }),
-
-  getRefillActivities: publicProcedure
-    .query(({ ctx }) => {
-      return ctx.db.query.Activity.findMany({
-        where: eq(Activity.type, "refill_water_container"),
-        with: {
-          RefillWaterContainer : true
+      try {
+        // Return all activities for the user with appropriate relations
+        const activities = await ctx.db.query.Activity.findMany({
+          where: eq(Activity.userId, userId),
+        });
+        
+        // For refill activities, fetch the related RefillWaterContainer data
+        const refillActivities = activities.filter(
+          (activity) => activity.type === "refill_water_container"
+        );
+        
+        if (refillActivities.length > 0) {
+          const refillActivitiesWithContainer = await ctx.db.query.Activity.findMany({
+            where: and(
+              eq(Activity.userId, userId),
+              eq(Activity.type, "refill_water_container")
+            ),
+            with: {
+              RefillWaterContainer: true
+            }
+          });
+          
+          // Replace the refill activities with their enriched versions
+          const activityMap = new Map<string, ActivityWithRefill>();
+          
+          // First add all activities
+          for (const activity of activities) {
+            activityMap.set(activity.id, {
+              ...activity,
+              RefillWaterContainer: null
+            });
+          }
+          
+          // Then replace refill activities with their enriched versions
+          for (const activity of refillActivitiesWithContainer) {
+            activityMap.set(activity.id, activity as unknown as ActivityWithRefill);
+          }
+          
+          return Array.from(activityMap.values());
         }
-      });
+        
+        // If no refill activities, just return the basic activities
+        return activities.map(activity => ({ 
+          ...activity, 
+          RefillWaterContainer: null 
+        })) as ActivityWithRefill[];
+      } catch (error) {
+        console.error("Failed to fetch user activities:", error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch activities'
+        });
+      }
     }),
 
-  createActivity: publicProcedure
+  // Create generic activity
+  createActivity: protectedProcedure
     .input(z.object({
       proofUrl: z.string().optional(),
-      limitPerDay: z.number(),
       date: z.date(),
       type: z.string(),
     }))
-    .mutation(async ({ctx, input}) => {
-      if(!ctx.session){
-        throw new Error("You must be logged in to access this resource");
-      }
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      
+      try {
+        // The trigger we created will enforce the daily limit automatically
+        try {
+          const [activity] = await ctx.db.insert(Activity).values({
+            userId: userId,
+            type: input.type,
+            date: input.date,
+            limitPerDay: 5, // Default limit, will be overridden by DB trigger
+          }).returning({
+            id: Activity.id,
+          });
 
-      const [activity] = await ctx.db.insert(Activity).values({
-        userId: ctx.session.user.id,
-        type: input.type,
-        date: input.date,
-        limitPerDay: input.limitPerDay,
-      }).returning({
-        id: Activity.id,
-      });
+          if (!activity) {
+            throw new Error("Failed to create activity");
+          }
 
-      if (!activity) {
-        throw new Error("Failed to create activity");
-      }
+          // Only create the RefillWaterContainer for specific types
+          if (input.type === "refill_water_container" && input.proofUrl) {
+            await ctx.db.insert(RefillWaterContainer).values({
+              proofUrl: input.proofUrl,
+              activityId: activity.id,
+            });
+          }
 
-      // Only create the RefillWaterContainer for specific types
-      if (input.type === "refill_water_container" && input.proofUrl) {
-        await ctx.db.insert(RefillWaterContainer).values({
-          proofUrl: input.proofUrl,
-          activityId: activity.id,
+          return activity;
+        } catch (error) {
+          // Catch database trigger exceptions
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: errorMessage
+          });
+        }
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+        console.error("Failed to create activity:", error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to create activity'
         });
       }
-
-      return activity;
     }),
 
-  // Keep the old method for backward compatibility but mark as deprecated
-  createRefillActivity: publicProcedure
+  // Specialized endpoint for refill activities
+  createRefillActivity: protectedProcedure
     .input(z.object({
       proofUrl: z.string().optional(),
-      limitPerDay: z.number(),
       date: z.date(),
     }))
-    .mutation(async ({ctx, input}) => {
-      if(!ctx.session){
-        throw new Error("You must be logged in to access this resource");
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const activityType = "refill_water_container";
+      
+      try {
+        // The trigger we created will enforce the daily limit automatically
+        try {
+          const [activity] = await ctx.db.insert(Activity).values({
+            userId: userId,
+            type: activityType,
+            date: input.date,
+            limitPerDay: 5, // Default limit, will be overridden by DB trigger
+          }).returning({
+            id: Activity.id,
+          });
+
+          if (!activity) {
+            throw new Error("Failed to create activity");
+          }
+
+          await ctx.db.insert(RefillWaterContainer).values({
+            proofUrl: input.proofUrl,
+            activityId: activity.id,
+          });
+
+          return activity;
+        } catch (error) {
+          // Catch database trigger exceptions
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: errorMessage
+          });
+        }
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+        console.error("Failed to create refill activity:", error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to create refill activity'
+        });
       }
-
-      const [activity] = await ctx.db.insert(Activity).values({
-        userId: ctx.session.user.id,
-        type: "refill_water_container",
-        date: input.date,
-        limitPerDay: input.limitPerDay,
-      }).returning({
-        id: Activity.id,
-      });
-
-      if (!activity) {
-        throw new Error("Failed to create activity");
-      }
-
-      await ctx.db.insert(RefillWaterContainer).values({
-        proofUrl: input.proofUrl,
-        activityId: activity.id,
-      });
-
-      return activity;
     }),
 });
 

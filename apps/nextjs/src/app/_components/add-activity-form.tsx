@@ -11,36 +11,83 @@ const ACTIVITY_TYPES = [
   { value: "plant_tree", label: "Plant a Tree" }
 ];
 
+// Default daily limit for refill activities
+const DEFAULT_DAILY_LIMIT = 5;
+
 export function AddActivityForm(): JSX.Element {
   const [proofUrl, setProofUrl] = useState<string>("");
   const [date, setDate] = useState<Date>(new Date());
+  const [error, setError] = useState<string>("");
   
   const utils = api.useUtils();
   
-  // Use the createRefillActivity endpoint for now as it's simpler
+  // Get user activities to count how many were done today
+  const { data: userActivities } = api.activity.getUserActivities.useQuery(undefined, {
+    refetchOnWindowFocus: true,
+  });
+
+  // Count today's refill activities
+  const todayString = new Date().toISOString().split('T')[0]; // Today in YYYY-MM-DD format
+  const todayActivities = userActivities?.filter(
+    activity => 
+      activity.type === "refill_water_container" && 
+      new Date(activity.date).toISOString().split('T')[0] === todayString
+  ) ?? [];
+  
+  const dailyCount = todayActivities.length;
+  const dailyLimit = DEFAULT_DAILY_LIMIT;
+  const remaining = Math.max(0, dailyLimit - dailyCount);
+  const reachedLimit = remaining === 0;
+  
+  // Use the createRefillActivity endpoint
   const createActivity = api.activity.createRefillActivity.useMutation({
     onSuccess: () => {
       setProofUrl("");
       setDate(new Date());
+      setError("");
       void utils.activity.getUserActivities.invalidate();
     },
     onError: (error) => {
       console.error("Failed to create activity:", error);
+      setError(error.message);
     },
   });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+    
+    if (reachedLimit) {
+      setError(`You have reached your daily limit of ${dailyLimit} refills`);
+      return;
+    }
+    
+    setError("");
+    
+    // The API endpoint doesn't need limitPerDay anymore
     createActivity.mutate({
       proofUrl: proofUrl || undefined,
       date,
-      limitPerDay: 1,
     });
   };
 
   return (
     <div className="w-full max-w-md rounded-lg bg-muted p-6">
       <h2 className="mb-4 text-2xl font-bold text-primary">Add New Activity</h2>
+      
+      <div className={`mb-4 p-2 text-sm rounded ${reachedLimit ? 'bg-destructive/20 text-destructive' : 'bg-muted-foreground/20'}`}>
+        <p>
+          Today's water refills: {dailyCount}/{dailyLimit}
+          {!reachedLimit && remaining > 0 && (
+            <span> ({remaining} remaining)</span>
+          )}
+        </p>
+      </div>
+
+      {error && (
+        <div className="mb-4 p-2 text-sm rounded bg-destructive/20 text-destructive">
+          {error}
+        </div>
+      )}
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -103,10 +150,10 @@ export function AddActivityForm(): JSX.Element {
 
         <button
           type="submit"
-          disabled={createActivity.isPending}
+          disabled={createActivity.isPending || reachedLimit}
           className="w-full rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
         >
-          {createActivity.isPending ? "Adding..." : "Add Activity"}
+          {createActivity.isPending ? "Adding..." : reachedLimit ? "Daily Limit Reached" : "Add Activity"}
         </button>
       </form>
     </div>

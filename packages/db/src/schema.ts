@@ -55,8 +55,7 @@ export const RefillWaterContainer = pgTable("refill_water_container", (t) => ({
   id: t.uuid().notNull().primaryKey().defaultRandom(),
   proofUrl: t.varchar({ length: 255 }),
   activityId: t.uuid().notNull().references(() => Activity.id, {onDelete: "cascade"}),
-
-}))
+}));
 
 export const CreateRefillWaterContainerSchema = createInsertSchema(RefillWaterContainer, {
   proofUrl: z.string().optional(),
@@ -65,6 +64,18 @@ export const CreateRefillWaterContainerSchema = createInsertSchema(RefillWaterCo
   id: true,
 });
 
+// Define the ActivityTypeLimit table to store limits for each activity type
+export const ActivityTypeLimit = pgTable("activity_type_limit", (t) => ({
+  type: t.varchar({ length: 255 }).notNull().primaryKey(),
+  limitPerDay: t.integer().notNull(),
+}));
+
+export const activityTypeRelations = relations(Activity, ({ one }) => ({
+  activityTypeLimit: one(ActivityTypeLimit, {
+    fields: [Activity.type],
+    references: [ActivityTypeLimit.type]
+  }),
+}));
 
 export const UserRelations = relations(User, ({ many }) => ({
   accounts: many(Account),

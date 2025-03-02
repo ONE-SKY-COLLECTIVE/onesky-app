@@ -60,7 +60,7 @@ function ActivityCard(props: {
         </h2>
         
         {/* Display proof if available */}
-        {container && container.proofUrl && (
+        {container.proofUrl && (
           <ActivityProof url={container.proofUrl} />
         )}
         
