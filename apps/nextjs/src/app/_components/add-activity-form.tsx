@@ -39,6 +39,9 @@ export function AddActivityForm(): JSX.Element {
   const remaining = Math.max(0, dailyLimit - dailyCount);
   const reachedLimit = remaining === 0;
   
+  // Calculate potential points based on proof URL
+  const potentialPoints = proofUrl ? 50 : 10;
+  
   // Use the createRefillActivity endpoint
   const createActivity = api.activity.createRefillActivity.useMutation({
     onSuccess: () => {
@@ -46,6 +49,8 @@ export function AddActivityForm(): JSX.Element {
       setDate(new Date());
       setError("");
       void utils.activity.getUserActivities.invalidate();
+      
+      window.location.reload();
     },
     onError: (error) => {
       console.error("Failed to create activity:", error);
@@ -63,10 +68,10 @@ export function AddActivityForm(): JSX.Element {
     
     setError("");
     
-    // The API endpoint doesn't need limitPerDay anymore
     createActivity.mutate({
       proofUrl: proofUrl || undefined,
       date,
+      limitPerDay: DEFAULT_DAILY_LIMIT
     });
   };
 
@@ -129,6 +134,11 @@ export function AddActivityForm(): JSX.Element {
             className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             placeholder="https://"
           />
+          <p className="mt-1 text-xs text-primary">
+            {proofUrl 
+              ? `✨ Adding proof will earn you 50 points!` 
+              : `Adding proof will earn you 50 points instead of 10`}
+          </p>
         </div>
 
         <div>
@@ -153,7 +163,11 @@ export function AddActivityForm(): JSX.Element {
           disabled={createActivity.isPending || reachedLimit}
           className="w-full rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
         >
-          {createActivity.isPending ? "Adding..." : reachedLimit ? "Daily Limit Reached" : "Add Activity"}
+          {createActivity.isPending 
+            ? "Adding..." 
+            : reachedLimit 
+              ? "Daily Limit Reached" 
+              : `Add Activity (+${potentialPoints} points)`}
         </button>
       </form>
     </div>

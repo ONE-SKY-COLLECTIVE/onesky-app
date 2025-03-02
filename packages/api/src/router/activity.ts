@@ -1,10 +1,11 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq } from "@acme/db";
+import { and, eq, sql } from "@acme/db";
 import { z } from "zod";
 
 import {
   Activity,
   RefillWaterContainer,
+  User
 } from "@acme/db/schema";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -23,6 +24,29 @@ interface ActivityWithRefill {
 }
 
 export const activityRouter = createTRPCRouter({
+  // Get user's current points
+  getUserPoints: protectedProcedure
+    .query(async ({ ctx }) => {
+      const userId = ctx.session.user.id;
+
+      try {
+        const user = await ctx.db.query.User.findFirst({
+          where: eq(User.id, userId),
+          columns: {
+            points: true
+          }
+        });
+        // Use a definite type assertion to assure TypeScript this is safe
+        return (user?.points ?? 0) as number;
+      } catch (error) {
+        console.error("Failed to fetch user points:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch user points"
+        });
+      }
+    }),
+
   // Get refill activities only
   getRefillActivities: protectedProcedure
     .query(async ({ ctx }) => {
@@ -153,6 +177,9 @@ export const activityRouter = createTRPCRouter({
             throw new Error("Failed to create activity");
           }
 
+          // Calculate points to award based on proof URL
+          const pointsToAward = input.proofUrl ? 50 : 10;
+          
           // Only create the RefillWaterContainer for specific types
           if (input.type === "refill_water_container" && input.proofUrl) {
             await ctx.db.insert(RefillWaterContainer).values({
@@ -160,6 +187,14 @@ export const activityRouter = createTRPCRouter({
               activityId: activity.id,
             });
           }
+          
+          // Award points to the user
+          await ctx.db
+            .update(User)
+            .set({
+              points: sql`${User.points} + ${pointsToAward}`
+            })
+            .where(eq(User.id, userId));
 
           return activity;
         } catch (error) {
@@ -206,10 +241,21 @@ export const activityRouter = createTRPCRouter({
             throw new Error("Failed to create activity");
           }
 
+          // Calculate points to award based on proof URL
+          const pointsToAward = input.proofUrl ? 50 : 10;
+
           await ctx.db.insert(RefillWaterContainer).values({
             proofUrl: input.proofUrl,
             activityId: activity.id,
           });
+          
+          // Award points to the user
+          await ctx.db
+            .update(User)
+            .set({
+              points: sql`${User.points} + ${pointsToAward}`
+            })
+            .where(eq(User.id, userId));
 
           return activity;
         } catch (error) {
