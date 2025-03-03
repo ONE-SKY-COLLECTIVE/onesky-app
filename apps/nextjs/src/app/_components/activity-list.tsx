@@ -93,7 +93,6 @@ function ActivityCard(props: {
         <p className="mt-2 text-sm">
           Date: {new Date(activity.date).toLocaleDateString()}
         </p>
-        <p>Limit per day: {activity.limitPerDay}</p>
       </div>
     </div>
   );
