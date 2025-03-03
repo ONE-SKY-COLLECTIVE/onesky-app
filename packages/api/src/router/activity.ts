@@ -275,6 +275,66 @@ export const activityRouter = createTRPCRouter({
         });
       }
     }),
+
+  // Delete a refill water container activity
+  deleteRefillActivity: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input: activityId }) => {
+      const userId = ctx.session.user.id;
+      
+      try {
+        // First, verify that this activity belongs to the user
+        const activity = await ctx.db.query.Activity.findFirst({
+          where: and(
+            eq(Activity.id, activityId),
+            eq(Activity.userId, userId),
+            eq(Activity.type, "refill_water_container")
+          ),
+          with: {
+            RefillWaterContainer: true
+          }
+        });
+
+        if (!activity) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Activity not found or you don't have permission to delete it"
+          });
+        }
+
+        // Calculate points to deduct based on whether there was proof
+        const pointsToDeduct = activity.RefillWaterContainer?.proofUrl ? 50 : 10;
+
+        // Start a transaction to ensure all operations succeed or fail together
+        await ctx.db.transaction(async (tx) => {
+          // Delete the RefillWaterContainer first (due to foreign key constraint)
+          if (activity.RefillWaterContainer) {
+            await tx.delete(RefillWaterContainer)
+              .where(eq(RefillWaterContainer.activityId, activityId));
+          }
+
+          // Delete the activity
+          await tx.delete(Activity)
+            .where(eq(Activity.id, activityId));
+
+          // Deduct points from the user
+          await tx.update(User)
+            .set({
+              points: sql`${User.points} - ${pointsToDeduct}`
+            })
+            .where(eq(User.id, userId));
+        });
+
+        return { success: true };
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+        console.error("Failed to delete refill activity:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to delete activity"
+        });
+      }
+    }),
 });
 
 export type { Activity } from "@acme/db/schema";
