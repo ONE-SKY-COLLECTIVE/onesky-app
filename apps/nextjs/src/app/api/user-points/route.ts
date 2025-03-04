@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 
 export const GET = auth(async (req) => {
   // Check if user is authenticated
-  if (!req.auth?.user?.id) {
+  if (!req.auth?.user.id) {
     return NextResponse.json(
       { error: "Unauthorized" },
       { status: 401 }

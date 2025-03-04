@@ -14,6 +14,21 @@ const ACTIVITY_TYPES = [
 // Default daily limit for refill activities
 const DEFAULT_DAILY_LIMIT = 5;
 
+interface ActivityData {
+  type: string;
+  date: string | Date;
+  RefillWaterContainer?: { proofUrl: string | null };
+}
+
+interface QueryOptions {
+  refetchOnWindowFocus?: boolean;
+  enabled?: boolean; 
+  refetchInterval?: number;
+  retry?: boolean | number;
+  onSuccess?: (data: ActivityData[]) => void;
+  onError?: (error: unknown) => void;
+}
+
 export function AddActivityForm(): JSX.Element {
   const [proofUrl, setProofUrl] = useState<string>("");
   const [date, setDate] = useState<Date>(new Date());
@@ -22,7 +37,11 @@ export function AddActivityForm(): JSX.Element {
   const utils = api.useUtils();
   
   // Get user activities to count how many were done today
-  const { data: userActivities } = api.activity.getUserActivities.useQuery(undefined, {
+  const { data: userActivities } = ((api.activity as unknown) as { 
+    getUserActivities: { 
+      useQuery: (input: undefined, options: QueryOptions) => { data: ActivityData[] | undefined } 
+    } 
+  }).getUserActivities.useQuery(undefined, {
     refetchOnWindowFocus: true,
   });
 
@@ -43,16 +62,30 @@ export function AddActivityForm(): JSX.Element {
   const potentialPoints = proofUrl ? 50 : 10;
   
   // Use the createRefillActivity endpoint
-  const createActivity = api.activity.createRefillActivity.useMutation({
+  const createActivity = ((api.activity as unknown) as {
+    createRefillActivity: {
+      useMutation: (options: {
+        onSuccess: () => void;
+        onError: (error: { message: string }) => void;
+      }) => {
+        mutate: (data: { proofUrl?: string; date: Date; limitPerDay: number }) => void;
+        isPending: boolean;
+      }
+    }
+  }).createRefillActivity.useMutation({
     onSuccess: () => {
       setProofUrl("");
       setDate(new Date());
       setError("");
-      void utils.activity.getUserActivities.invalidate();
+      void ((utils.activity as unknown) as { 
+        getUserActivities: { 
+          invalidate: () => Promise<void> 
+        } 
+      }).getUserActivities.invalidate();
       
       window.location.reload();
     },
-    onError: (error) => {
+    onError: (error: { message: string }) => {
       console.error("Failed to create activity:", error);
       setError(error.message);
     },
