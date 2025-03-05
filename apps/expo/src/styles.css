@@ -119,6 +119,7 @@
   border-top-right-radius: 40px;
   border-top-left-radius: 40px;
   padding: 5%;
+  padding-bottom: 0%;
   /* height: 100%; */
   height: 500px;
   width: 100%;
@@ -133,12 +134,13 @@
 
 .header{
   width: 100vw;
-  height: 14vh;
+  height: 12vh;
   background-color: #D8F5FA;
   border-radius: 35;
   display: flex;
   justify-content: flex-end;
   padding-bottom: 2%;
+  padding-left: 2%;
   box-sizing: border-box;
 }
 
@@ -210,19 +212,25 @@
   align-items: center;
 }
 
+.absolute-h-center {
+  left: 0%;
+}
+
 .navbar {
   background-color: #FFFFFF;
   width: 100%;
-  height: 10%;
+  height: 9%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   border-top: #D9EBB2 1px solid;
   position: absolute;
   bottom: 0%;
-  padding: 3%;
   padding-top: 0;
+  padding-bottom: 3%;
+  padding: 3%;
   box-sizing: border-box;
+  /* position: relative; */
 }
 
 .content-switch {
@@ -233,7 +241,7 @@
   border-style: "solid";
   border-radius: 10;
   height: 50px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction: row;
   padding: 2%;
@@ -244,4 +252,95 @@
   align-items: center;
   width: 50%;
   border-radius: 8px;
+}
+
+.blue-background {
+  background-color: #C4EFF7;
+}
+
+.white-background {
+  background-color: #FFFFFF;
+}
+
+.green-background {
+  background-color: #A1CE3F;
+}
+
+.entire-screen {
+  height: 100%;
+  width: 100%;
+}
+
+.activity-points {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  background-color: #B1EAF5;
+  border-color: #7eb7c2;
+  border-width: 1;
+  border-radius: 20;
+  padding: 5;
+  right: 10;
+  top: -12;
+}
+
+.activity-card-div {
+  padding: 20;
+  background-color: '#F6FAEC';
+  border-color: '#D9EBB2';
+  border-width: 1;
+  border-radius: 10;
+  margin-inline: 1%;
+  width: '48%';
+  height: 139;
+  position: relative;
+}
+
+.progress-bar {
+  border-radius: 9999;
+  background-color: #E5E5E5;
+  height: 7px;
+  width: 85%;
+  margin-top: 6px;
+}
+
+.activities-page{
+  padding-top: 0%;
+  padding: 5%;
+  padding-bottom: 0%;
+}
+
+.gray-bg {
+  background-color: #FAFAFA;
+}
+
+.green-bg {
+  background-color: #F6FAEC,
+}
+
+.navbar-text {
+  bottom: -12px;
+  width: 250%;
+  text-align: center;
+}
+
+.quiz-progress {
+  background-color: #F7F7F8;
+  width: 40px;
+  height: 10px;
+}
+
+.quiz-progress-active {
+  background-color: #A1CE3F;
+  width: 40px;
+  height: 15px;
+}
+
+.quiz-option {
+  border-color: #E7E5E4;
+  border-radius: 8px;
+  border-width: 1.3;
+  width: 100%;
+  padding: 5%;
+  margin-bottom: 10px;
 }

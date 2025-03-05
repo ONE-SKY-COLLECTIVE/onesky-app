@@ -7,12 +7,20 @@ import { useState } from "react";
 export default function Homepage() {
     const [contentSelect, setContentSelect] = useState(0);
     const activities = [
-        { id: '1', title: 'Quiz' },
-        { id: '2', title: 'Share meal' },
-        { id: '3', title: 'Watching videos or ads' },
-        { id: '4', title: 'Flights climbed' },
-        { id: 'Waterbottle', title: 'Water Refills' },
-        { id: 'Activities', title: 'More activities' },
+        { id: 'Quiz', title: 'Quiz' },
+        { id: '2', title: 'Log your meal' },
+        { id: 'Waterbottle', title: 'Water refill' },
+        { id: '3', title: 'View to plant' },
+        { id: '4', title: 'Steps' },
+        { id: 'Activities', title: 'View more...' },
+      ];
+      const events = [
+        { id: '1', title: 'Attend a Beach Clean' },
+        { id: '2', title: 'Organise a Beach Clean' },
+        { id: 'Waterbottle', title: 'Download Refill App' },
+        { id: '3', title: 'Download Vinted/Depop App' },
+        { id: '4', title: 'Join a sustainability or a Vegan group' },
+        { id: '6', title: 'More coming soon' },
       ];
 
     const styles = StyleSheet.create({
@@ -21,7 +29,7 @@ export default function Homepage() {
             marginBottom: 100
         },
         separator: {
-          height: 12,
+          height: 20,
         },
       });
 
@@ -30,6 +38,7 @@ export default function Homepage() {
     <View className="home-page" >
         <SafeAreaView edges={["top"]}>
             <View className="flex-v h-full">
+                <Image className="absolute top-[130px] w-full" source={require('../../../assets/icons/home-background.png')}/>
                 <View className="flex justify-between mx-8">
                     <Image source={require('../../../assets/icons/profile.png')} />
                     <View className="flex items-center">
@@ -49,7 +58,7 @@ export default function Homepage() {
                                                     contentSelect === 0 ? '#A1CE3F' : undefined
                                           }}>
                             <Text className={`text-[14px] ${contentSelect === 0 && 'font-semibold'}`}>
-                                Activities
+                                Today's Activities
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setContentSelect(1)} 
@@ -63,14 +72,25 @@ export default function Homepage() {
                         </TouchableOpacity>
                     </View>
                     <View style={{ flex: 1}}>
-                        {contentSelect === 0 &&
+                        {contentSelect === 0 ?
                             <FlatList
                                 className="pt-3"
                                 data={activities}
                                 numColumns={2}
-                                keyExtractor={(item) => item.id}
+                                keyExtractor={(item) => item.id + "activities"}
                                 ItemSeparatorComponent={() => <View style={styles.separator} />}
                                 renderItem={({ item }) => <ActivityBox title={item.title} id={item.id} />}
+                                contentContainerStyle={{ paddingBottom: 20 }}
+                                showsVerticalScrollIndicator={false}
+                            />
+                            :
+                            <FlatList
+                                className="pt-3"
+                                data={events}
+                                numColumns={2}
+                                keyExtractor={(item) => item.id + "events"}
+                                ItemSeparatorComponent={() => <View style={styles.separator} />}
+                                renderItem={({ item }) => <ActivityBox title={item.title} id={item.id} event={true}/>}
                                 contentContainerStyle={{ paddingBottom: 20 }}
                                 showsVerticalScrollIndicator={false}
                             />
