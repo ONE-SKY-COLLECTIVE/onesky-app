@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Link from "next/link";
 
 import { api, HydrateClient } from "~/trpc/server";
 import { AuthShowcase } from "./_components/auth-showcase";
@@ -36,12 +35,6 @@ export default function HomePage() {
               <PostList />
             </Suspense>
           </div>
-          <Link 
-            href="/activities" 
-            className="text-primary hover:text-primary/80"
-          >
-            View Activities
-          </Link>
         </div>
       </main>
     </HydrateClient>
