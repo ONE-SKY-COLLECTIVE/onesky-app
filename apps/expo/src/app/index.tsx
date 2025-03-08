@@ -3,6 +3,7 @@ import { Button, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, Stack } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
+import { useRouter } from "expo-router";
 
 import type { RouterOutputs } from "~/utils/api";
 import { api } from "~/utils/api";
@@ -115,6 +116,8 @@ function MobileAuth() {
 }
 
 export default function Index() {
+  const router = useRouter();
+
   const utils = api.useUtils();
 
   const postQuery = api.post.all.useQuery();
@@ -122,6 +125,7 @@ export default function Index() {
   const deletePostMutation = api.post.delete.useMutation({
     onSettled: () => utils.post.all.invalidate(),
   });
+
 
   return (
     <SafeAreaView className="bg-background">
@@ -133,6 +137,7 @@ export default function Index() {
         </Text>
 
         <MobileAuth />
+        <Button title="Homepage" onPress={() => router.push("/pages/Homepage")} />
 
         <View className="py-2">
           <Text className="font-semibold italic text-primary">
