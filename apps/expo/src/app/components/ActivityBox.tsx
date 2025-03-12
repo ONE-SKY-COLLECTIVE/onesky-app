@@ -5,6 +5,7 @@ interface ActivityBoxProps {
     title: string;
     id: string;
     event?: boolean;
+    inactive?: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
       position: 'relative',
     }
 });
-const ActivityBox: React.FC<ActivityBoxProps> = ({title, id, event}) => {
+const ActivityBox: React.FC<ActivityBoxProps> = ({title, id, event, inactive}) => {
     const router = useRouter();
     const iconTracker = {
         "Quiz": require("../../../assets/icons/quiz2.png"),
@@ -41,15 +42,15 @@ const ActivityBox: React.FC<ActivityBoxProps> = ({title, id, event}) => {
 
     };
     return (
-            <Pressable style={styles.card} className={`${title !== "More coming soon" ? "green-bg" : "gray-bg"}`} onPress={() => title !== "More coming soon" && router.push(`../pages/${id}` as any)}>
+            <Pressable style={styles.card} disabled={inactive} className={`${title !== "More coming soon" ? "green-bg-50" : "gray-bg"} ${inactive && "opacity-50"}`} onPress={() => title !== "More coming soon" && router.push(`../pages/${id}` as any)}>
                     {title !== "More coming soon" && title !== "View more..." && 
                         <View className="activity-points">
-                            <Image  source={require("../../../assets/icons/diamond.png")} />
+                            <Image resizeMode="contain" className="diamond-small" source={require("../../../assets/icons/diamond.png")} />
                             <Text className="text-[11px] font-semibold">+50 pts</Text>
                         </View>
                     }
                     <View className="flex-v">
-                        <Image className="h-[65px]" source={iconTracker[title as keyof typeof iconTracker]}/>
+                        <Image resizeMode="contain" className="h-[65px]" source={iconTracker[title as keyof typeof iconTracker]}/>
                         <Text className="raleway font-semibold mt-2">{title}</Text>
                             {title !== "More coming soon" && title !== "View more..." && !event && 
                                 <View className="flex">

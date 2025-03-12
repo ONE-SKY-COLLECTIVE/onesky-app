@@ -118,8 +118,7 @@ function MobileAuth() {
 }
 
 const SplashScreen = () => {
-  const { width } = Dimensions.get("window"); // Get screen width
-
+  const { width } = Dimensions.get("window"); 
   const cloudPosition = useRef(new Animated.Value(width)).current;
   const cloudPosition2 = useRef(new Animated.Value(width)).current;
   const cloudPosition3 = useRef(new Animated.Value(width)).current;
@@ -143,8 +142,6 @@ const SplashScreen = () => {
       cloudPosition2.setValue(width);
       cloudPosition3.setValue(width);
       cloudPosition4.setValue(width);
-
-
 
       Animated.timing(cloudPosition2, {
           toValue: -50,
@@ -181,14 +178,14 @@ const SplashScreen = () => {
 }, []);
 
   return (
-    <View className="h-full w-full blue-background p-4">
+    <View className="h-full w-full blue-bg-300 p-4">
       <Animated.View style={{ opacity: fadeAnim }} className="self-center my-auto">
         <Image source={require('../../assets/icons/oneskylogo.png')} className="self-center my-auto" />
       </Animated.View>
       <View className="absolute top-[350px]"> 
           <Animated.View style={{ transform: [{ translateX: cloudPosition }] }}>
               <Image
-                  source={require('../../assets/icons/cloud1.png')} // Replace with your cloud image
+                  source={require('../../assets/icons/cloud1.png')}
                   resizeMode="contain"
               />
           </Animated.View>
@@ -196,7 +193,7 @@ const SplashScreen = () => {
       <View className="absolute top-[220px]"> 
           <Animated.View style={{ transform: [{ translateX: cloudPosition2 }] }}>
               <Image
-                  source={require('../../assets/icons/cloud2.png')} // Replace with your cloud image
+                  source={require('../../assets/icons/cloud2.png')}
                   resizeMode="contain"
               />
           </Animated.View>
@@ -204,7 +201,7 @@ const SplashScreen = () => {
       <View className="absolute top-[250px]"> 
           <Animated.View style={{ transform: [{ translateX: cloudPosition3 }] }}>
               <Image
-                  source={require('../../assets/icons/cloud3.png')} // Replace with your cloud image
+                  source={require('../../assets/icons/cloud3.png')}
                   resizeMode="contain"
               />
           </Animated.View>
@@ -212,7 +209,7 @@ const SplashScreen = () => {
       <View className="absolute top-[600px]"> 
           <Animated.View style={{ transform: [{ translateX: cloudPosition2 }] }}>
               <Image
-                  source={require('../../assets/icons/cloud4.png')} // Replace with your cloud image
+                  source={require('../../assets/icons/cloud4.png')}
                   resizeMode="contain"
               />
           </Animated.View>
