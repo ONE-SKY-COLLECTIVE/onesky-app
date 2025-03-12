@@ -22,16 +22,70 @@ export const CreatePostSchema = createInsertSchema(Post, {
   updatedAt: true,
 });
 
+
 export const User = pgTable("user", (t) => ({
   id: t.uuid().notNull().primaryKey().defaultRandom(),
   name: t.varchar({ length: 255 }),
   email: t.varchar({ length: 255 }).notNull(),
   emailVerified: t.timestamp({ mode: "date", withTimezone: true }),
   image: t.varchar({ length: 255 }),
+  points: t.integer().notNull().default(0),
+}));
+
+export const Activity = pgTable("activity", (t) => ({
+  id: t.uuid().notNull().primaryKey().defaultRandom(),
+  userId: t.uuid().notNull().references(() => User.id, {onDelete: "cascade"}),
+  date: t.timestamp({mode: "date", withTimezone: true}).notNull(),
+  type: t.varchar({ length: 255 }).notNull(),
+  limitPerDay: t.integer().notNull(),
+}));
+
+export const CreateActivitySchema = createInsertSchema(Activity, {
+  userId: z.string(),
+  date: z.string(),
+  type: z.string(),
+  limitPerDay: z.number(),
+}).omit({
+  id: true,
+});
+
+export type CreateActivityType = z.infer<typeof CreateActivitySchema>;
+
+export const RefillWaterContainer = pgTable("refill_water_container", (t) => ({  
+  id: t.uuid().notNull().primaryKey().defaultRandom(),
+  proofUrl: t.varchar({ length: 255 }),
+  activityId: t.uuid().notNull().references(() => Activity.id, {onDelete: "cascade"}),
+}));
+
+export const CreateRefillWaterContainerSchema = createInsertSchema(RefillWaterContainer, {
+  proofUrl: z.string().optional(),
+  activityId: z.string(),
+}).omit({
+  id: true,
+});
+
+// Define the ActivityTypeLimit table to store limits for each activity type
+export const ActivityTypeLimit = pgTable("activity_type_limit", (t) => ({
+  type: t.varchar({ length: 255 }).notNull().primaryKey(),
+  limitPerDay: t.integer().notNull(),
+}));
+
+export const activityTypeRelations = relations(Activity, ({ one }) => ({
+  activityTypeLimit: one(ActivityTypeLimit, {
+    fields: [Activity.type],
+    references: [ActivityTypeLimit.type]
+  }),
 }));
 
 export const UserRelations = relations(User, ({ many }) => ({
   accounts: many(Account),
+}));
+
+export const activitiesRelations = relations(Activity, ({one}) => ({   
+  RefillWaterContainer: one(RefillWaterContainer, {
+    fields: [Activity.id],
+    references: [RefillWaterContainer.activityId]
+  }),
 }));
 
 export const Account = pgTable(
