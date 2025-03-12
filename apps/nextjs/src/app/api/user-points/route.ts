@@ -28,6 +28,7 @@ export const GET = auth(async (req) => {
     return NextResponse.json({
       points: user?.points ?? 0
     });
+    
   } catch (error) {
     console.error("Failed to fetch user points:", 
       error instanceof Error ? error.message : "Unknown error");

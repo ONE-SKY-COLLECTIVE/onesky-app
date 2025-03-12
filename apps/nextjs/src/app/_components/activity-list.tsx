@@ -78,7 +78,7 @@ function ActivityCard(props: {
           <Button
             variant="destructive"
             size="sm"
-            onClick={() => deleteActivity.mutate(activity.id)}
+            onClick={() => deleteActivity.mutate({ activityId: activity.id })}
             disabled={deleteActivity.isPending}
           >
             {deleteActivity.isPending ? "Deleting..." : "Delete"}
