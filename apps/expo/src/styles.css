@@ -114,6 +114,10 @@
   height: fit-content;
 }
 
+.fit-width {
+  width: fit-content;
+} 
+
 .main-content{
   background-color: #FAFAFA;
   /* flex-grow: 1; */
@@ -154,7 +158,7 @@
 }
 
 .waterbottle-page {
-  background-color: #F5FAEB;
+  background-color: #F2F2F2;
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -176,21 +180,31 @@
 }
 
 .refill-div{
+  z-index: 1000;;
+  position: absolute;
+  bottom: 0;
   background-color: #FFFFFF;
-  flex-grow: 1;
   width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
   border-top-right-radius: 36px;
   border-top-left-radius: 36px;
-  align-items: center;
-  justify-content: center;
+  align-items: start;
+  justify-content: start;
+  padding: 5%;
+  padding-bottom: 10%;
 }
 
-
+.refill-div-confirm{
+  background-color: #ECF5D9;
+}
 .refill-animation-div{
-  height: 40vh;
+  height: 50vh;
   width: fit-content;
   align-items: center;
   display: flex;
+  justify-content: center;
 }
 
 .refill-button {
@@ -220,12 +234,20 @@
   background-color: #F6FAEC,
 }
 
+.green-bg-100 {
+  background-color: #ECF5D9;
+}
+
 .green-bg-200 {
   background-color: #D9EBB2;
 }
 
 .blue-bg-300 {
   background-color: #C4EFF7;
+}
+
+.yellow-bg-500{
+  background-color: #EFBD6E;
 }
 
 .white-bg {
@@ -236,7 +258,9 @@
   background-color: #A1CE3F;
 }
 
-
+.disabled-bg{
+  background-color: #E7E5E4;
+}
 
 .align-self-center {
   align-self: center;
@@ -409,3 +433,14 @@
   width: 30px;
 }
 
+.border-1{
+  border-width: 1px;
+  border-color: #D9EBB2;
+  border-radius: 8px;
+}
+
+.border-2{
+  border-width: 2px;
+  border-color: #E8EAEB;
+  border-radius: 8px;
+}

@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
+import ProgressBar from "../components/ProgressBar";
+import Completion from "../components/Completion";
 
 const Quiz = () => {
     const router = useRouter();
@@ -26,7 +28,7 @@ const Quiz = () => {
 
         // Submit route
         } else {
-            if (userAnswer) {
+            if (userAnswer || userAnswer === 0) {
                 if (rightAnswerIndex === userAnswer) {
                     setAnswerCorrect(true);
                     // playSuccess();
@@ -46,7 +48,7 @@ const Quiz = () => {
   useEffect(() => {
     const playSuccess = () => {
             if (animationRef.current) {
-                animationRef.current.play(50, 70);
+                animationRef.current.play(50, 60);
             }
     };
     if (answerCorrect === true) {
@@ -57,47 +59,14 @@ const Quiz = () => {
     // If every part of the quiz is done, display this page instead
     if (quizProgression >= 6) {
         return (
-            <SafeAreaView className=" pt-4 flex-v h-full green-bg-50" edges={["top"]}>
-                    <TouchableOpacity className="px-5" onPress={() => router.push("/pages/Homepage")}>
-                        <Image resizeMode="contain" source={require("../../../assets/icons/x-button.png")} />
-                    </TouchableOpacity>
-                    <View className="flex-v justify-center flex-grow pb-20">
-                        <Text className="raleway text-[22px] font-bold text-center">
-                            Yay, Congratulations!
-                        </Text>
-                        <Image resizeMode="contain" source={require("../../../assets/icons/quiz-done.png")} className="quiz-done"/>
-                        <Text className="text-center mt-4 mb-8 gray-800">You have successfully completed the quiz!</Text>
-                        <View className="flex items-center justify-center">
-                            <Image className="diamond-large"source={require('../../../assets/icons/diamond.png')}/>
-                            <Text className="raleway test-[16px] font-bold ml-2">50 pts</Text>
-                        </View>
-                        <Text className="gray-800 text-center mt-5">
-                            50 pts are on your way!!
-                        </Text>
-                    </View>
-            </SafeAreaView>
+            <Completion points={50}/>
         )
     }
 
     return (
         <View>
             <SafeAreaView className=" pt-4 flex-v h-full" edges={["top"]}>
-                <View className="flex items-center justify-between px-5">
-                    <TouchableOpacity onPress={() => router.push("/pages/Homepage")}>
-                        <Image resizeMode="contain" source={require("../../../assets/icons/x-button.png")} />
-                    </TouchableOpacity>
-                    <View className="flex items-center">
-                        <View className={`mx-1 rounded-[999px] ${quizProgression >= 1 ? "quiz-progress-active" : "quiz-progress"}`}/>
-                        <View className={`mx-1 rounded-[999px] ${quizProgression >= 2 ? "quiz-progress-active" : "quiz-progress"}`}/>
-                        <View className={`mx-1 rounded-[999px] ${quizProgression >= 3 ? "quiz-progress-active" : "quiz-progress"}`}/>
-                        <View className={`mx-1 rounded-[999px] ${quizProgression >= 4 ? "quiz-progress-active" : "quiz-progress"}`}/>
-                        <View className={`mx-1 rounded-[999px] ${quizProgression >= 5 ? "quiz-progress-active" : "quiz-progress"}`}/>
-                    </View>
-                    <View className="flex items-center">
-                        <Image resizeMode="contain" className="diamond-small" source={require("../../../assets/icons/diamond.png")}/>
-                        <Text className="raleway ml-1 font-semibold">50 pts</Text>
-                    </View>
-                </View>
+                <ProgressBar progression={quizProgression} numProgressions={5} points={50}/>
                 <View className="mt-[50px] px-5">
                     <Text className="text-[20px] font-bold">
                         {question1}

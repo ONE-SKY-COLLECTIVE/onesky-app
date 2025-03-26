@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "owner": "onesky",
+    "slug": "onesky-app",
+    "extra": {
+      "eas": {
+        "projectId": "0e3d9225-a919-4938-ad82-ac76fa8921d0"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.onesky.oneskyapp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    }
+  }
+}
