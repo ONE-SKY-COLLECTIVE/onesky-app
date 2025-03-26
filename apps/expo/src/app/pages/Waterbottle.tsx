@@ -29,6 +29,9 @@ const Waterbottle = () => {
         if (confettiAnimationRef.current) {
             confettiAnimationRef.current.play(0, 110);
         }
+        if (refillAnimationRef.current) {
+            refillAnimationRef.current.play(0, 43);
+        }
         setConfirm(true);
     }
 
@@ -36,17 +39,14 @@ const Waterbottle = () => {
         if (confettiAnimationRef.current) {
             confettiAnimationRef.current.play(110, 110);
         }
+        if (refillAnimationRef.current) {
+            refillAnimationRef.current.play(5, 5);
+        }
     }, [])
     
     if (collectPoints) {
-        return <Completion points={50}/>
+        return <Completion points={50} activityName="the refill activity"/>
     }
-
-    const refillClick = () => {
-        setRefillNum(refillNum + 1);
-        // TODO: Get instructions from team about how to handle the refill animation
-    }
-    
 
     return (
         <View className="waterbottle-page">
@@ -61,7 +61,6 @@ const Waterbottle = () => {
                     loop={false}
                 />
             </View>
-            
             <View className={`${confirm ? "refill-div-confirm" : ""} refill-div `}>
                     <View className="yellow-bg-500 rounded-[100px] p-3 text-[12px] fit-width self-start">
                         <Text>{totalRefills} bottles filled today</Text>
@@ -82,7 +81,7 @@ const Waterbottle = () => {
                     {!confirm &&
                     <View className="flex justify-between mt-8 mb-3">
                         {Array.from({length: 7}).map((_, index) => (
-                            <TouchableOpacity key={index} className={`py-3 px-4 border-1 ${refillNum >= index + 1 && "green-bg-50" }`} onPress={refillClick}>
+                            <TouchableOpacity key={index} className={`py-3 px-4 border-1 ${refillNum >= index + 1 && "green-bg-50" }`} onPress={() => setRefillNum(index + 1)}>
                                 <Text>{index + 1}</Text>
                             </TouchableOpacity>
                         ))}
@@ -100,7 +99,6 @@ const Waterbottle = () => {
                                 <TouchableOpacity onPress={() => setConfirm(false)} className="green-bg-500 w-full py-3 rounded-[8px] mt-2"><Text className="text-center">Refill another bottle</Text></TouchableOpacity>
                                 </View>
                             }
-                            
                         </View>
                 }
                     <LottieView                     
@@ -111,7 +109,6 @@ const Waterbottle = () => {
                     loop={false}/>
             </View>
             </SafeAreaView>
-
         </View>
     );
 };
@@ -122,7 +119,6 @@ const styles = StyleSheet.create({
         width: '100%',
         padding: 0,
         margin: 0,
-
     },
     confettiAnimation: {
         height: 400,
