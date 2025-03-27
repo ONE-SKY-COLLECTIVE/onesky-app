@@ -9,6 +9,7 @@ import { useColorScheme } from "nativewind";
 import { TRPCProvider } from "~/utils/api";
 
 import "../styles.css";
+import NavBar from "./components/NavBar";
 
 // This is the main layout of the app
 // It wraps your pages with the providers they need

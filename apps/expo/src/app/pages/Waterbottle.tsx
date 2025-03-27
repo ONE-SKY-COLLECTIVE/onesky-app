@@ -45,19 +45,17 @@ const Waterbottle = () => {
                 <Pressable onPress={() => router.push("/pages/Homepage")} style={{backgroundColor: 'white'}}>
                     <Text>temp back button</Text>
                 </Pressable>
-
             </View>
             <View className="refill-animation-div">
                 <LottieView
                     ref={animationRef}
                     source={require("../../../assets/animations/RefillAnimation1.json")}
                     style={styles.refillAnimation}
-                    className="refill-animation"
                     autoPlay={false}
                     loop={false}
                 />
             </View>
-
+            
             <View className="refill-div">
                 <View className="flex align-self-center">
                     <TouchableOpacity disabled={refillNum <= 0} onPress={handleDecrease} className="refill-button gray">

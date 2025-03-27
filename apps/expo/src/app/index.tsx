@@ -1,13 +1,15 @@
-import { useState } from "react";
-import { Button, Pressable, Text, TextInput, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Animated, Button, Dimensions, Easing, Image, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, Stack } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
 
+
 import type { RouterOutputs } from "~/utils/api";
 import { api } from "~/utils/api";
 import { useSignIn, useSignOut, useUser } from "~/utils/auth";
+import Onboarding from "./pages/Onboarding";
 
 function PostCard(props: {
   post: RouterOutputs["post"]["all"][number];
@@ -115,8 +117,110 @@ function MobileAuth() {
   );
 }
 
+const SplashScreen = () => {
+  const { width } = Dimensions.get("window"); 
+  const cloudPosition = useRef(new Animated.Value(width)).current;
+  const cloudPosition2 = useRef(new Animated.Value(width)).current;
+  const cloudPosition3 = useRef(new Animated.Value(width)).current;
+  const cloudPosition4 = useRef(new Animated.Value(width)).current;
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const animateCloud = () => {
+        cloudPosition.setValue(width);
+
+        Animated.timing(cloudPosition, {
+            toValue: -200,
+            duration: 3000, 
+            easing: Easing.linear,
+            useNativeDriver: true,
+        }).start(); 
+    };
+
+    const animateCloudOthers = () => {
+      cloudPosition2.setValue(width);
+      cloudPosition3.setValue(width);
+      cloudPosition4.setValue(width);
+
+      Animated.timing(cloudPosition2, {
+          toValue: -50,
+          duration: 3000, 
+          easing: Easing.linear,
+          useNativeDriver: true,
+      }).start(); 
+
+      Animated.timing(cloudPosition3, {
+        toValue: 300,
+        duration: 3000, 
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start(); 
+
+      Animated.timing(cloudPosition4, {
+        toValue: -50,
+        duration: 3000, 
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start(); 
+    };
+    
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 8000,
+      useNativeDriver: true,
+    }).start();
+
+    animateCloud();
+    setTimeout(() => {
+      animateCloudOthers();
+    }, 2000)
+}, []);
+
+  return (
+    <View className="h-full w-full blue-bg-300 p-4">
+      <Animated.View style={{ opacity: fadeAnim }} className="self-center my-auto">
+        <Image source={require('../../assets/icons/oneskylogo.png')} className="self-center my-auto" />
+      </Animated.View>
+      <View className="absolute top-[350px]"> 
+          <Animated.View style={{ transform: [{ translateX: cloudPosition }] }}>
+              <Image
+                  source={require('../../assets/icons/cloud1.png')}
+                  resizeMode="contain"
+              />
+          </Animated.View>
+      </View>
+      <View className="absolute top-[220px]"> 
+          <Animated.View style={{ transform: [{ translateX: cloudPosition2 }] }}>
+              <Image
+                  source={require('../../assets/icons/cloud2.png')}
+                  resizeMode="contain"
+              />
+          </Animated.View>
+      </View>
+      <View className="absolute top-[250px]"> 
+          <Animated.View style={{ transform: [{ translateX: cloudPosition3 }] }}>
+              <Image
+                  source={require('../../assets/icons/cloud3.png')}
+                  resizeMode="contain"
+              />
+          </Animated.View>
+      </View>
+      <View className="absolute top-[600px]"> 
+          <Animated.View style={{ transform: [{ translateX: cloudPosition2 }] }}>
+              <Image
+                  source={require('../../assets/icons/cloud4.png')}
+                  resizeMode="contain"
+              />
+          </Animated.View>
+      </View>
+    </View>
+  )
+}
+
+
+
 export default function Index() {
-  const router = useRouter();
 
   const utils = api.useUtils();
 
@@ -125,40 +229,12 @@ export default function Index() {
   const deletePostMutation = api.post.delete.useMutation({
     onSettled: () => utils.post.all.invalidate(),
   });
-
-
-  return (
-    <SafeAreaView className="bg-background">
-      {/* Changes page title visible on the header */}
-      <Stack.Screen options={{ title: "Home Page" }} />
-      <View className="h-full w-full bg-background p-4">
-        <Text className="pb-2 text-center text-5xl font-bold text-foreground">
-          One Sky Collective
-        </Text>
-
-        <MobileAuth />
-        <Button title="Homepage" onPress={() => router.push("/pages/Homepage")} />
-
-        <View className="py-2">
-          <Text className="font-semibold italic text-primary">
-            Press on a post
-          </Text>
-        </View>
-
-        <FlashList
-          data={postQuery.data}
-          estimatedItemSize={20}
-          ItemSeparatorComponent={() => <View className="h-2" />}
-          renderItem={(p) => (
-            <PostCard
-              post={p.item}
-              onDelete={() => deletePostMutation.mutate(p.item.id)}
-            />
-          )}
-        />
-
-        <CreatePost />
-      </View>
-    </SafeAreaView>
-  );
+  
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+        setIsSplashVisible(false);
+    }, 8000);
+  }, []);
+  return isSplashVisible ? <SplashScreen /> : <Onboarding />;
 }
