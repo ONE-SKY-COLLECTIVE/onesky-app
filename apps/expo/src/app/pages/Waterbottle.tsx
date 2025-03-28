@@ -14,6 +14,7 @@ const Waterbottle = () => {
     const [confirm, setConfirm] = useState(false);
     const [collectPoints, setCollectPoints] = useState(false);
     const router = useRouter();
+    const [exitWithoutRefilling, setExitWithoutRefilling] = useState(false);
 
     // TODO: When integrated with backend, initialize totalRefills with backend data
     const [totalRefills, setTotalRefills] = useState(0);
@@ -35,6 +36,18 @@ const Waterbottle = () => {
         setConfirm(true);
     }
 
+    const handleExitWithoutRefilling = () => {
+        if (!confirm && !exitWithoutRefilling) {
+            setExitWithoutRefilling(true);
+        }  else {
+            router.push("/pages/Homepage");
+        }
+    }
+
+    const handleContinueRefilling = () => {
+        setExitWithoutRefilling(false);
+    }
+
     useEffect(() => {
         if (confettiAnimationRef.current) {
             confettiAnimationRef.current.play(110, 110);
@@ -43,6 +56,13 @@ const Waterbottle = () => {
             refillAnimationRef.current.play(5, 5);
         }
     }, [])
+
+    // Temporary fix for confetti animation showing prematurely
+    useEffect(() => {
+        if (confettiAnimationRef.current) {
+            confettiAnimationRef.current.play(110, 110);
+        }
+    }, [exitWithoutRefilling])
     
     if (collectPoints) {
         return <Completion points={50} activityName="the refill activity"/>
@@ -51,7 +71,7 @@ const Waterbottle = () => {
     return (
         <View className="waterbottle-page">
             <SafeAreaView className="h-full" edges={["top", "bottom"]}>
-            <ProgressBar progression={totalRefills} numProgressions={7} points={50}/>
+            <ProgressBar progression={totalRefills} numProgressions={7} points={50} utility={handleExitWithoutRefilling}/>
             <View className="refill-animation-div">
                 <LottieView
                     ref={refillAnimationRef}
@@ -61,6 +81,7 @@ const Waterbottle = () => {
                     loop={false}
                 />
             </View>
+            {!exitWithoutRefilling ? 
             <View className={`${confirm ? "refill-div-confirm" : ""} refill-div `}>
                     <View className="yellow-bg-500 rounded-[100px] p-3 text-[12px] fit-width self-start">
                         <Text>{totalRefills} bottles filled today</Text>
@@ -108,6 +129,23 @@ const Waterbottle = () => {
                     autoPlay={false}
                     loop={false}/>
             </View>
+            :
+            <View className="refill-div">
+                <View className="flex items-center">
+                    <Image resizeMode="contain" source={require("../../../assets/icons/warning.png")} className="w-[40px] h-[40px]"/>
+                    <Text className="text-[20px] font-semibold sora py-5">
+                        Don't leave us!
+                    </Text>
+                </View>
+                <Text className="text-[14px] raleway w-half">Don’t leave us yet without refilling your bottle.</Text>
+                <Image resizeMode="contain" source={require("../../../assets/icons/leave-icon.png")} className="absolute h-[100px] w-[100px] left-3/4 top-[20px]"/>
+
+                <View>
+                    <TouchableOpacity onPress={() => router.push("/pages/Homepage")} className="border-2 rounded-[8px] py-3 mb-2 mt-8"><Text className="text-center">Quit</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={handleContinueRefilling} className="green-bg-500 w-full py-3 rounded-[8px] mt-2"><Text className="text-center">Continue Refilling</Text></TouchableOpacity>
+                </View>
+            </View>
+            }
             </SafeAreaView>
         </View>
     );
@@ -126,6 +164,7 @@ const styles = StyleSheet.create({
         padding: 0,
         margin: 0,
         bottom: '30%',
+        left: '10%',
         position: 'absolute',
         zIndex: -1000
     }

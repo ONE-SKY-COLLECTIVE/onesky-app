@@ -5,17 +5,18 @@ interface ProgressBarProps {
     progression: number;
     numProgressions: number;
     points: number;
+    utility?: () => void;
 }
-const ProgressBar: React.FC<ProgressBarProps> = ({progression, points, numProgressions}) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({progression, points, numProgressions, utility}) => {
     const router = useRouter();
-    const progressWidth = 230; // Total width for progress indicators
+    const progressWidth = 230;
     const spacing = 10;
     const numDots = numProgressions;
     const dotWidth = (progressWidth - (spacing * (numDots - 1))) / numDots;
 
     return (
         <View className="flex items-center justify-between px-5">
-            <TouchableOpacity onPress={() => router.push("/pages/Homepage")}>
+            <TouchableOpacity onPress={utility ? utility : () => router.push("/pages/Homepage")}>
                 <Image resizeMode="contain" source={require("../../../assets/icons/x-button.png")} />
             </TouchableOpacity>
             <View className="flex-row items-center" style={{width: progressWidth}}>
