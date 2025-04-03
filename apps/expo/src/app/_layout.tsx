@@ -10,10 +10,27 @@ import { TRPCProvider } from "~/utils/api";
 
 import "../styles.css";
 import NavBar from "./components/NavBar";
+import { useEffect, useState } from "react";
 
 // This is the main layout of the app
 // It wraps your pages with the providers they need
+
+// Load fonts
+const loadFonts = async () => {
+  await Font.loadAsync({
+    Sora: require("../../assets/fonts/Sora.ttf"),
+    Raleway: require("../../assets/fonts/Raleway.ttf"),
+  });
+};
+
 export default function RootLayout() {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    loadFonts()
+      .then(() => setFontsLoaded(true))
+      .catch((error) => console.error("Error loading fonts:", error));
+  }, []);
   const { colorScheme } = useColorScheme();
 
   

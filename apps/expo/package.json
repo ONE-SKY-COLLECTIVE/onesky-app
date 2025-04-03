@@ -17,6 +17,8 @@
   "dependencies": {
     "@bacons/text-decoder": "^0.0.0",
     "@expo/metro-config": "^0.19.9",
+    "@hookform/resolvers": "^3.10.0",
+    "@lottiefiles/dotlottie-react": "^0.13.3",
     "@shopify/flash-list": "1.7.2",
     "@tanstack/react-query": "catalog:",
     "@trpc/client": "catalog:",
@@ -26,6 +28,7 @@
     "expo-constants": "~17.0.4",
     "expo-dev-client": "~5.0.11",
     "expo-font": "^13.0.4",
+    "expo-image": "~2.0.7",
     "expo-linking": "~7.0.4",
     "expo-router": "~4.0.17",
     "expo-secure-store": "^14.0.1",
@@ -36,6 +39,7 @@
     "nativewind": "~4.1.23",
     "react": "catalog:react18",
     "react-dom": "catalog:react18",
+    "react-hook-form": "^7.54.2",
     "react-native": "~0.77.0",
     "react-native-css-interop": "~0.1.22",
     "react-native-gesture-handler": "~2.22.1",
@@ -43,7 +47,10 @@
     "react-native-safe-area-context": "~5.1.0",
     "react-native-screens": "~4.5.0",
     "react-native-splash-screen": "^3.3.0",
-    "superjson": "2.2.2"
+    "react-native-vector-icons": "^10.2.0",
+    "react-native-web": "^0.19.13",
+    "superjson": "2.2.2",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@acme/api": "workspace:*",
