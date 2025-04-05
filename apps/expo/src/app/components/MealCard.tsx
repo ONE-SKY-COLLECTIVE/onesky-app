@@ -1,10 +1,7 @@
-import { useState } from 'react';
-import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from "react-native-safe-area-context";
-import ProgressBar from '../components/ProgressBar';
+import { View, Text, Pressable, TouchableOpacity, Image } from 'react-native'
+import React, { useState } from 'react'
 
-const Meal = () => {
-    const [totalMeals, setTotalMeals] = useState(0);
+const MealCard = () => {
     const [fulfilled, setFulfilled] = useState(false);
     const [selectedMealId, setSelectedMealId] = useState<string | null>(null);
 
@@ -13,21 +10,8 @@ const Meal = () => {
         setSelectedMealId(selectedMealId === mealTypeId ? null : mealTypeId);
     };
 
-    const handleSubmit = () => {
-        if (selectedMealId) {
-            setTotalMeals(totalMeals + 1);
-            // Add any other logic you need when submitting
-        }
-    };
-
   return (
-    <View className='flex justify-center items-start h-full'>
-        <SafeAreaView className="h-full" edges={["top", "bottom"]}>
-            <ProgressBar progression={totalMeals} numProgressions={3} points={50}/>
-            <View className='mt-8'>
-                <Text className="text-[20px] font-semibold sora py-5">Select the type of meal</Text>
-            </View>
-            <View className="flex-1 flex-col gap-4">
+  <View className="flex-1 flex-col gap-4">
                 {mealTypes.map((mealType) => (
                     <Pressable
                         key={mealType.id}
@@ -41,16 +25,13 @@ const Meal = () => {
                 ))}
                 <TouchableOpacity disabled={!selectedMealId} className={`w-full py-3 rounded-lg ${!selectedMealId ? "opacity-50 disabled-bg" : "green-bg-500"}`}><Text className="text-center">Submit</Text></TouchableOpacity>
             </View>
-        </SafeAreaView>
-    </View>
   )
 }
+
 const mealTypes = [
     { id: 'vegan', title: 'Vegan', icon: require("../../../assets/icons/vegan-meal.png")},
     { id: 'vegetarian', title: 'Vegetarian', icon: require("../../../assets/icons/vegetarian-meal.png")},
     { id: 'flexitarian', title: 'Flexitarian', icon: require("../../../assets/icons/flexitarian-meal.png")},
 ]
 
-
-
-export default Meal
+export default MealCard
