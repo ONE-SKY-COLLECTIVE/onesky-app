@@ -68,9 +68,9 @@
   }
 }
 
-.sora {
+/* .sora {
   font-family: 'Sora';
-}
+} */
 
 .activity{
   background-color: #9DE5F2;
@@ -116,7 +116,7 @@
 
 .fit-width {
   width: fit-content;
-} 
+}
 
 .main-content{
   background-color: #FAFAFA;
@@ -215,6 +215,12 @@
   align-items: center;
 }
 
+.meals-page {
+  background-color: #F2F2F2;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+}
 
 .green-600{
   color: #81A532
