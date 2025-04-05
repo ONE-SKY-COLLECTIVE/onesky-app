@@ -39,10 +39,10 @@ const Quiz = () => {
         }
     }
 
-    const bgClass = answerCorrect === true 
-        ? "green-bg-200" 
-        : answerCorrect === false 
-        ? "yellow-bg-300" 
+    const bgClass = answerCorrect === true
+        ? "green-bg-200"
+        : answerCorrect === false
+        ? "yellow-bg-300"
         : "";
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const Quiz = () => {
     // If every part of the quiz is done, display this page instead
     if (quizProgression >= 6) {
         return (
-            <Completion points={50}/>
+            <Completion points={50} activityName=""/>
         )
     }
 
@@ -73,9 +73,9 @@ const Quiz = () => {
                     </Text>
                     <View className="mt-10">
                         {answers1.map((option, index) => {return (
-                            <TouchableOpacity 
-                                key={index + 'answers'} className="quiz-option" 
-                                style={{borderWidth: userAnswer === index ? 3 : 1.3}} 
+                            <TouchableOpacity
+                                key={index + 'answers'} className="quiz-option"
+                                style={{borderWidth: userAnswer === index ? 3 : 1.3}}
                                 onPress={() => userAnswer === index ? setUserAnswer(undefined) : setUserAnswer(index)}
                                 disabled={answerCorrect !== undefined}
                             >
@@ -92,7 +92,7 @@ const Quiz = () => {
                             <View className="flex mb-auto justify-between">
                                 <View className="flex-v">
                                     <View className="flex items-center">
-                                        {answerCorrect ? 
+                                        {answerCorrect ?
                                             <LottieView
                                                 ref={animationRef}
                                                 source={require("../../../assets/animations/SuccessAnimation.json")}
@@ -113,14 +113,14 @@ const Quiz = () => {
                                         {answerCorrect ? "keep it up!" : `Option ${rightAnswerIndex + 1}`}
                                     </Text>
                                 </View>
-                                {answerCorrect ? 
-                                <Image 
+                                {answerCorrect ?
+                                <Image
                                     source={answerCorrect ? require("../../../assets/icons/correct-world.png") : require("../../../assets/icons/incorrect-world.png")}
                                     resizeMode="contain"
                                     className="h-[120px] w-[138px]"
                                 />
                                 :
-                                <Image 
+                                <Image
                                     source={answerCorrect ? require("../../../assets/icons/correct-world.png") : require("../../../assets/icons/incorrect-world.png")}
                                     resizeMode="contain"
                                     className="h-[120px] w-[147px]"
