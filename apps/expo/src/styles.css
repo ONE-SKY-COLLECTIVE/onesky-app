@@ -215,11 +215,16 @@
   align-items: center;
 }
 
-.meals-page {
-  background-color: #F2F2F2;
-  height: 100vh;
-  width: 100vw;
-  display: flex;
+.meals {
+  @apply flex justify-center items-start h-full
+}
+
+.meals-card {
+  @apply  flex-1 flex-col justify-center items-center rounded-xl w-full h-full border border-[#D9EBB2]
+}
+
+.meals-radio {
+  @apply absolute left-4 top-4 size-4 rounded-full
 }
 
 .green-600{

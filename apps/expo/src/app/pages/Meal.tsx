@@ -21,7 +21,7 @@ const Meal = () => {
     };
 
   return (
-    <View className='flex justify-center items-start h-full'>
+    <View className='meals'>
         <SafeAreaView className="h-full" edges={["top", "bottom"]}>
             <ProgressBar progression={totalMeals} numProgressions={3} points={50}/>
             <View className='mt-8'>
@@ -32,14 +32,20 @@ const Meal = () => {
                     <Pressable
                         key={mealType.id}
                         onPress={() => handleMealSelect(mealType.id)}
-                        className={`flex-1 size-8 flex justify-center items-center rounded-xl ${selectedMealId !== mealType.id ? 'bg-white' : 'green-bg-50'} w-full h-full border border-[#D9EBB2]`}
+                        className={`meals-card ${selectedMealId !== mealType.id ? 'bg-white' : 'green-bg-50'} w-full h-full border border-[#D9EBB2]`}
                         >
-                            <View className={`absolute left-4 top-4 size-4 rounded-full ${selectedMealId !== mealType.id ? 'border border-[#E7E5E4]' : 'border-[2px] border-[#A1CE3F]'}`} />
-                            <Image resizeMode="contain" source={mealType.icon} className="size-[100px]"/>
-                            <Text className="text-sm font-semibold">{mealType.title}</Text>
+                            <View className={`meals-radio ${selectedMealId !== mealType.id ? 'border border-[#E7E5E4]' : 'border-[2px] border-[#A1CE3F]'}`} />
+                                <Image resizeMode="contain" source={mealType.icon} className="size-[100px]"/>
+                                <Text className="text-sm font-semibold absolute bottom-3">{mealType.title}</Text>
                     </Pressable>
                 ))}
-                <TouchableOpacity disabled={!selectedMealId} className={`w-full py-3 rounded-lg ${!selectedMealId ? "opacity-50 disabled-bg" : "green-bg-500"}`}><Text className="text-center">Submit</Text></TouchableOpacity>
+                <TouchableOpacity
+                    disabled={!selectedMealId}
+                    onPress={alert.bind(null, `You selected the ${selectedMealId} meal`)}
+                    className={`w-full py-3 rounded-lg ${!selectedMealId ? "opacity-50 disabled-bg" : "green-bg-500"}`}
+                >
+                    <Text className="text-center">Submit</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     </View>
