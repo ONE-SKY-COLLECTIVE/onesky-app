@@ -216,7 +216,7 @@
 }
 
 .meals {
-  @apply flex justify-center items-start h-full
+  @apply flex justify-center items-start h-screen w-screen;
 }
 
 .meals-card {

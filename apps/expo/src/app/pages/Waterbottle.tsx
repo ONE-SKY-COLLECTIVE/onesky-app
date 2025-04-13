@@ -63,7 +63,7 @@ const Waterbottle = () => {
             confettiAnimationRef.current.play(110, 110);
         }
     }, [exitWithoutRefilling])
-    
+
     if (collectPoints) {
         return <Completion points={50} activityName="the refill activity"/>
     }
@@ -81,15 +81,15 @@ const Waterbottle = () => {
                     loop={false}
                 />
             </View>
-            {!exitWithoutRefilling ? 
+            {!exitWithoutRefilling ?
             <View className={`${confirm ? "refill-div-confirm" : ""} refill-div `}>
                     <View className="yellow-bg-500 rounded-[100px] p-3 text-[12px] fit-width self-start">
                         <Text>{totalRefills} bottles filled today</Text>
                     </View>
                     <Text className="text-[20px] font-semibold sora py-5">
-                        {!confirm 
-                            ? "How many bottles do you have" 
-                            : totalRefills >= dailyGoal 
+                        {!confirm
+                            ? "How many bottles do you have"
+                            : totalRefills >= dailyGoal
                                 ? "You're Amazing!"
                                 : "Good job!"
                         }
@@ -108,11 +108,11 @@ const Waterbottle = () => {
                         ))}
                     </View>
                     }
-                    {!confirm ? 
+                    {!confirm ?
                         <TouchableOpacity onPress={handleRefillConfirm} disabled={refillNum <= 0} className={`w-full py-3 rounded-[8px] ${refillNum <= 0 ? "opacity-50 disabled-bg" : "green-bg-500"}`}><Text className="text-center">Confirm refill</Text></TouchableOpacity>
                         :
                         <View>
-                            {totalRefills >= dailyGoal ? 
+                            {totalRefills >= dailyGoal ?
                                 <TouchableOpacity onPress={() => setCollectPoints(true)} className="green-bg-500 rounded-[8px] py-3 mb-2 mt-8"><Text className="text-center">Collect your points</Text></TouchableOpacity>
                                 :
                                 <View>
@@ -122,7 +122,7 @@ const Waterbottle = () => {
                             }
                         </View>
                 }
-                    <LottieView                     
+                    <LottieView
                     ref={confettiAnimationRef}
                     source={require("../../../assets/animations/ConfettiAnimation.json")}
                     style={styles.confettiAnimation}
