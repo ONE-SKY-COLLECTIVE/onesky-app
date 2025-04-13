@@ -134,13 +134,13 @@ const Meal = () => {
                                     }
                                 </View>
                         }
-                            <LottieView
-                                ref={confettiAnimationRef}
-                                source={require("../../../assets/animations/ConfettiAnimation.json")}
-                                style={styles.confettiAnimation}
-                                autoPlay={true}
-                                loop={false}
-                            />
+                        <LottieView
+                            ref={confettiAnimationRef}
+                            source={require("../../../assets/animations/ConfettiAnimation.json")}
+                            style={styles.confettiAnimation}
+                            autoPlay={true}
+                            loop={false}
+                        />
                     </View>
                 </>
             )}
