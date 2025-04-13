@@ -43,6 +43,10 @@
   --ring: 240 5% 64.9%;
   --radius: 0.5rem;
   --gray: #A3A3A3;
+  --bright-lime: #A1CE3F;
+  --light-gray-bg: #E7E5E4;
+  --light-slate-gray: #A8A29E;
+  
 }
 
 @media (prefers-color-scheme: dark) {

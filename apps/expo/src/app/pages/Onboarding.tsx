@@ -20,7 +20,7 @@ const Onboarding = () => {
                             Next
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => router.push("/pages/(auth)/Login")} className="w-full rounded-[8px]">
+                    <TouchableOpacity onPress={() => router.push("/pages/(auth)/login")} className="w-full rounded-[8px]">
                         <Text className="text-center p-3 mt-2">
                             Skip
                         </Text>
