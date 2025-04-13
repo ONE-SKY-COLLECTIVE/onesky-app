@@ -1,14 +1,24 @@
-import { useState } from 'react';
-import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { use, useEffect, useRef, useState } from 'react';
+import { Image, Pressable, Text, TouchableOpacity, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+import LottieView from "lottie-react-native";
+
+
 import ProgressBar from '../components/ProgressBar';
+import Completion from '../components/Completion';
 
 const Meal = () => {
     const [totalMeals, setTotalMeals] = useState(0);
     const [fulfilled, setFulfilled] = useState(false);
+    const [collectPoints, setCollectPoints] = useState(false);
+    const confettiAnimationRef = useRef<LottieView>(null);
     const [confirm, setConfirm] = useState(false);
-    // const [selectedMealId, setSelectedMealId] = useState<string | null>('vegan');
     const [selectedMealId, setSelectedMealId] = useState<string | null>(null);
+
+    const dailyGoal = 3;
+    const router= useRouter();
+
 
 
     const handleMealSelect = (mealTypeId: string) => {
@@ -17,7 +27,14 @@ const Meal = () => {
 
     const handleSubmit = () => {
         if (selectedMealId) {
-            setTotalMeals(totalMeals + 1);
+            setTotalMeals(prevTotal => {
+                return prevTotal + 1;
+                // return newTotal;
+            });
+
+            if (confettiAnimationRef.current) {
+                confettiAnimationRef.current.play(0, 110);
+            }
             setConfirm(true);
         }
     };
@@ -29,18 +46,29 @@ const Meal = () => {
      };
 
 
+    useEffect(() => {
+        if (confettiAnimationRef.current) {
+            confettiAnimationRef.current.play(110, 110);
+        }
+    }, [])
+
+
+     if (collectPoints) {
+         return <Completion points={50} activityName="meal log" />
+     }
+
   return (
     <View className='meals'>
         <SafeAreaView className="h-full" edges={["top", "bottom"]}>
-            <View className='w-full'>
+            <View className='w-screen'>
                 <ProgressBar progression={totalMeals} numProgressions={3} points={50} />
             </View>
             {!confirm && (
                 <>
-                    <View className='mt-8'>
+                    <View className='mt-8 mx-4'>
                         <Text className="text-[20px] font-semibold sora py-5">Select the type of meal</Text>
                     </View>
-                    <View className="flex-1 flex-col gap-4">
+                    <View className="flex-1 flex-col gap-4 m-4">
                         {mealTypes.map((mealType) => (
                             <Pressable
                                 key={mealType.id}
@@ -76,6 +104,44 @@ const Meal = () => {
                             <Text className='text-center'>1.3 billion people could be fed by the grain that is currently being fed to livestock for meat production.</Text>
                         )}
                     </View>
+                    <View className={`${confirm ? "refill-div-confirm" : ""} refill-div `}>
+                            <View className="yellow-bg-500 rounded-[100px] p-3 text-[12px] fit-width self-start">
+                                <Text>+{totalMeals} {totalMeals === 1 ? 'log added today' : 'logs added today'}</Text>
+                            </View>
+                            <Text className="text-[20px] font-semibold sora py-5">
+                                {!confirm
+                                    ? "How many bottles do you have"
+                                    : totalMeals >= dailyGoal
+                                        ? "You're Amazing!"
+                                        : "Good job!"
+                                }
+                            </Text>
+                            <Text className="text-[14px] raleway">{totalMeals >= dailyGoal ? "Today's activity is complete!\nCome back tomorrow to keep saving the planet." : "Keep sharing your meal log"}</Text>
+                            {confirm &&
+                                <Image resizeMode="contain" source={require("../../../assets/icons/meal-planet.png")} className="absolute h-[100px] w-[100px] left-3/4 top-[20px]"/>
+                            }
+                            {!confirm ?
+                                <TouchableOpacity className={"w-full py-3 rounded-[8px] green-bg-500"}><Text className="text-center">Confirm meal log</Text></TouchableOpacity>
+                                :
+                                <View>
+                                    {totalMeals >= dailyGoal ?
+                                        <TouchableOpacity onPress={() => setCollectPoints(true)} className="green-bg-500 rounded-[8px] py-3 mb-2 mt-8"><Text className="text-center">Collect your points</Text></TouchableOpacity>
+                                        :
+                                        <View>
+                                        <TouchableOpacity onPress={() => router.push("/pages/Homepage")} className="border-2 rounded-[8px] py-3 mb-2 mt-8"><Text className="text-center">Go to home</Text></TouchableOpacity>
+                                        <TouchableOpacity onPress={() => setConfirm(false)} className="green-bg-500 w-full py-3 rounded-[8px] mt-2"><Text className="text-center">Submit another meal log</Text></TouchableOpacity>
+                                        </View>
+                                    }
+                                </View>
+                        }
+                            <LottieView
+                                ref={confettiAnimationRef}
+                                source={require("../../../assets/animations/ConfettiAnimation.json")}
+                                style={styles.confettiAnimation}
+                                autoPlay={true}
+                                loop={false}
+                            />
+                    </View>
                 </>
             )}
 
@@ -83,6 +149,26 @@ const Meal = () => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+    refillAnimation: {
+        height: 400,
+        width: '100%',
+        padding: 0,
+        margin: 0,
+    },
+    confettiAnimation: {
+        height: 400,
+        width: '100%',
+        padding: 0,
+        margin: 0,
+        bottom: '30%',
+        left: '10%',
+        position: 'absolute',
+        zIndex: -1000
+    }
+  });
+
 const mealTypes = [
     { id: 'vegan', title: 'Vegan', icon: require("../../../assets/icons/vegan-meal.png")},
     { id: 'vegetarian', title: 'Vegetarian', icon: require("../../../assets/icons/vegetarian-meal.png")},
