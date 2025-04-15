@@ -23,8 +23,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     bundleIdentifier: "onesky-app",
     supportsTablet: true,
     infoPlist: {
-      ITSAppUsesNonExemptEncryption: false
-    }
+      ITSAppUsesNonExemptEncryption: false,
+    },
   },
   android: {
     package: "your.bundle.identifier",
@@ -34,19 +34,21 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
   },
   extra: {
-     eas: {
-       projectId: "0e3d9225-a919-4938-ad82-ac76fa8921d0",
-     },
+    eas: {
+      projectId: "0e3d9225-a919-4938-ad82-ac76fa8921d0",
+    },
   },
   experiments: {
     tsconfigPaths: true,
     typedRoutes: true,
   },
-  plugins: ["expo-router",[
-    "expo-font",
-    {
-      "fonts": ["./assets/fonts/Raleway.tff","./assets/fonts/Sora.tff" ],
-      
-    }
-  ]],
+  plugins: [
+    "expo-router",
+    [
+      "expo-font",
+      {
+        fonts: ["./assets/fonts/Raleway.tff", "./assets/fonts/Sora.tff"],
+      },
+    ],
+  ],
 });

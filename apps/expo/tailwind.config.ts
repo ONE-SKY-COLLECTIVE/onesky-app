@@ -7,5 +7,4 @@ import baseConfig from "@acme/tailwind-config/native";
 export default {
   content: ["./src/**/*.{ts,tsx}"],
   presets: [baseConfig, nativewind],
-  
 } satisfies Config;

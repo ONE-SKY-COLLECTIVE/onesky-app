@@ -1,10 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { Animated, Button, Dimensions, Easing, Image, Pressable, Text, TextInput, View } from "react-native";
+import {
+  Animated,
+  Button,
+  Dimensions,
+  Easing,
+  Image,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, Stack } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
-import { useRouter } from "expo-router";
-
 
 import type { RouterOutputs } from "~/utils/api";
 import { api } from "~/utils/api";
@@ -118,7 +126,7 @@ function MobileAuth() {
 }
 
 const SplashScreen = () => {
-  const { width } = Dimensions.get("window"); 
+  const { width } = Dimensions.get("window");
   const cloudPosition = useRef(new Animated.Value(width)).current;
   const cloudPosition2 = useRef(new Animated.Value(width)).current;
   const cloudPosition3 = useRef(new Animated.Value(width)).current;
@@ -128,14 +136,14 @@ const SplashScreen = () => {
 
   useEffect(() => {
     const animateCloud = () => {
-        cloudPosition.setValue(width);
+      cloudPosition.setValue(width);
 
-        Animated.timing(cloudPosition, {
-            toValue: -200,
-            duration: 3000, 
-            easing: Easing.linear,
-            useNativeDriver: true,
-        }).start(); 
+      Animated.timing(cloudPosition, {
+        toValue: -200,
+        duration: 3000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start();
     };
 
     const animateCloudOthers = () => {
@@ -144,27 +152,27 @@ const SplashScreen = () => {
       cloudPosition4.setValue(width);
 
       Animated.timing(cloudPosition2, {
-          toValue: -50,
-          duration: 3000, 
-          easing: Easing.linear,
-          useNativeDriver: true,
-      }).start(); 
+        toValue: -50,
+        duration: 3000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start();
 
       Animated.timing(cloudPosition3, {
         toValue: 300,
-        duration: 3000, 
+        duration: 3000,
         easing: Easing.linear,
         useNativeDriver: true,
-      }).start(); 
+      }).start();
 
       Animated.timing(cloudPosition4, {
         toValue: -50,
-        duration: 3000, 
+        duration: 3000,
         easing: Easing.linear,
         useNativeDriver: true,
-      }).start(); 
+      }).start();
     };
-    
+
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 8000,
@@ -174,54 +182,57 @@ const SplashScreen = () => {
     animateCloud();
     setTimeout(() => {
       animateCloudOthers();
-    }, 2000)
-}, []);
+    }, 2000);
+  }, []);
 
   return (
-    <View className="h-full w-full blue-bg-300 p-4">
-      <Animated.View style={{ opacity: fadeAnim }} className="self-center my-auto">
-        <Image source={require('../../assets/icons/oneskylogo.png')} className="self-center my-auto" />
+    <View className="blue-bg-300 h-full w-full p-4">
+      <Animated.View
+        style={{ opacity: fadeAnim }}
+        className="my-auto self-center"
+      >
+        <Image
+          source={require("../../assets/icons/oneskylogo.png")}
+          className="my-auto self-center"
+        />
       </Animated.View>
-      <View className="absolute top-[350px]"> 
-          <Animated.View style={{ transform: [{ translateX: cloudPosition }] }}>
-              <Image
-                  source={require('../../assets/icons/cloud1.png')}
-                  resizeMode="contain"
-              />
-          </Animated.View>
+      <View className="absolute top-[350px]">
+        <Animated.View style={{ transform: [{ translateX: cloudPosition }] }}>
+          <Image
+            source={require("../../assets/icons/cloud1.png")}
+            resizeMode="contain"
+          />
+        </Animated.View>
       </View>
-      <View className="absolute top-[220px]"> 
-          <Animated.View style={{ transform: [{ translateX: cloudPosition2 }] }}>
-              <Image
-                  source={require('../../assets/icons/cloud2.png')}
-                  resizeMode="contain"
-              />
-          </Animated.View>
+      <View className="absolute top-[220px]">
+        <Animated.View style={{ transform: [{ translateX: cloudPosition2 }] }}>
+          <Image
+            source={require("../../assets/icons/cloud2.png")}
+            resizeMode="contain"
+          />
+        </Animated.View>
       </View>
-      <View className="absolute top-[250px]"> 
-          <Animated.View style={{ transform: [{ translateX: cloudPosition3 }] }}>
-              <Image
-                  source={require('../../assets/icons/cloud3.png')}
-                  resizeMode="contain"
-              />
-          </Animated.View>
+      <View className="absolute top-[250px]">
+        <Animated.View style={{ transform: [{ translateX: cloudPosition3 }] }}>
+          <Image
+            source={require("../../assets/icons/cloud3.png")}
+            resizeMode="contain"
+          />
+        </Animated.View>
       </View>
-      <View className="absolute top-[600px]"> 
-          <Animated.View style={{ transform: [{ translateX: cloudPosition2 }] }}>
-              <Image
-                  source={require('../../assets/icons/cloud4.png')}
-                  resizeMode="contain"
-              />
-          </Animated.View>
+      <View className="absolute top-[600px]">
+        <Animated.View style={{ transform: [{ translateX: cloudPosition2 }] }}>
+          <Image
+            source={require("../../assets/icons/cloud4.png")}
+            resizeMode="contain"
+          />
+        </Animated.View>
       </View>
     </View>
-  )
-}
-
-
+  );
+};
 
 export default function Index() {
-
   const utils = api.useUtils();
 
   const postQuery = api.post.all.useQuery();
@@ -229,11 +240,11 @@ export default function Index() {
   const deletePostMutation = api.post.delete.useMutation({
     onSettled: () => utils.post.all.invalidate(),
   });
-  
+
   const [isSplashVisible, setIsSplashVisible] = useState(true);
   useEffect(() => {
     setTimeout(() => {
-        setIsSplashVisible(false);
+      setIsSplashVisible(false);
     }, 8000);
   }, []);
   return isSplashVisible ? <SplashScreen /> : <Onboarding />;

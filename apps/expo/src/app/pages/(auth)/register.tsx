@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Keyboard,
+  Pressable,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
+import { Link, router } from "expo-router";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useForm } from "react-hook-form";
+import * as yup from "yup";
+
 import icons from "~/lib/icons";
 
 // ✅ Define form fields interface
@@ -57,13 +58,13 @@ export default function ExpoForm() {
       "keyboardDidShow",
       () => {
         setKeyboardVisible(true);
-      }
+      },
     );
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
       () => {
         setKeyboardVisible(false);
-      }
+      },
     );
 
     return () => {
@@ -115,13 +116,13 @@ export default function ExpoForm() {
 
   return (
     <SafeAreaView className="flex-1 bg-[#C4EFF7]">
-      <View style={{ height: 100, position: "relative", marginTop:40 }}>
+      <View style={{ height: 100, position: "relative", marginTop: 40 }}>
         <Image
           source={icons.register}
           alt="Hero image"
           contentFit="cover"
           style={{ width: 360, height: 100 }}
-          className="block z-10 w-full"
+          className="z-10 block w-full"
         />
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -130,49 +131,68 @@ export default function ExpoForm() {
             keyboardVisible ? {} : { position: "relative" },
           ]}
         >
-          <View className="bg-white rounded-t-3xl p-4 h-[90vh]" style={{ marginTop: keyboardVisible ? -110 : -30 }}>
-            <Text style={{ fontFamily: "Raleway" }} className="text-xl font-bold mb-4">
+          <View
+            className="h-[90vh] rounded-t-3xl bg-white p-4"
+            style={{ marginTop: keyboardVisible ? -110 : -30 }}
+          >
+            <Text
+              style={{ fontFamily: "Raleway" }}
+              className="mb-4 text-xl font-bold"
+            >
               Welcome
             </Text>
 
             {/* ✅ Reusable Input Fields */}
-            {formFields.map(({ key, label, placeholder, icon, secure }, index) => (
-              <View key={index} className="mb-4 ">
-                <Text className="text-sm mb-1 text-[#7B7B7B]">{label}</Text>
-                <View
-                  className={`flex-row items-center rounded-lg px-3  border  ${
-                    focusedField === key ? "border-[var(--bright-lime)]" : "border-gray-300"
-                  }`}
-                >
-                  <Image className="w-4 h-4" source={icon} alt="An icon" style={{ width: 16, height: 16 }} />
-                  <Controller
-                    control={control}
-                    name={key as keyof FormData}
-                    render={({ field: { onChange, value } }) => (
-                      <TextInput
-                        className="flex-1 ml-2 text-sm text-black focus:border-none"
-                        placeholder={placeholder}
-                        placeholderTextColor="#B3B3B3"
-                        secureTextEntry={secure}
-                        value={value}
-                        onChangeText={onChange}
-                        onFocus={() => setFocusedField(key)}
-                        onBlur={() => setFocusedField(null)}
-                      />
-                    )}
-                  />
+            {formFields.map(
+              ({ key, label, placeholder, icon, secure }, index) => (
+                <View key={index} className="mb-4">
+                  <Text className="mb-1 text-sm text-[#7B7B7B]">{label}</Text>
+                  <View
+                    className={`flex-row items-center rounded-lg border px-3 ${
+                      focusedField === key
+                        ? "border-[var(--bright-lime)]"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    <Image
+                      className="h-4 w-4"
+                      source={icon}
+                      alt="An icon"
+                      style={{ width: 16, height: 16 }}
+                    />
+                    <Controller
+                      control={control}
+                      name={key as keyof FormData}
+                      render={({ field: { onChange, value } }) => (
+                        <TextInput
+                          className="ml-2 flex-1 text-sm text-black focus:border-none"
+                          placeholder={placeholder}
+                          placeholderTextColor="#B3B3B3"
+                          secureTextEntry={secure}
+                          value={value}
+                          onChangeText={onChange}
+                          onFocus={() => setFocusedField(key)}
+                          onBlur={() => setFocusedField(null)}
+                        />
+                      )}
+                    />
+                  </View>
+                  {errors[key as keyof FormData] && (
+                    <Text className="text-xs text-red-500">
+                      {errors[key as keyof FormData]?.message}
+                    </Text>
+                  )}
                 </View>
-                {errors[key as keyof FormData] && (
-                  <Text className="text-red-500 text-xs">{errors[key as keyof FormData]?.message}</Text>
-                )}
-              </View>
-            ))}
+              ),
+            )}
 
             {/* ✅ Submit Button */}
             <Pressable
               onPress={handleSubmit(onSubmit)}
-              className={`py-3 rounded-lg mt-6 text-center font-semibold transition-all ${
-                isValid ? "bg-[var(--bright-lime)] text-white" : "bg-[var(--light-gray-bg)] text-[var(--light-slate-gray)]"
+              className={`mt-6 rounded-lg py-3 text-center font-semibold transition-all ${
+                isValid
+                  ? "bg-[var(--bright-lime)] text-white"
+                  : "bg-[var(--light-gray-bg)] text-[var(--light-slate-gray)]"
               }`}
               disabled={!isValid}
             >
@@ -181,32 +201,47 @@ export default function ExpoForm() {
 
             {/* ✅ OAuth Buttons */}
             <View className="mt-5">
-              <Text className="text-center text-gray-500 uppercase text-sm">Or</Text>
-              <Text className="text-center text-gray-500 mb-4 text-sm">Sign up with</Text>
+              <Text className="text-center text-sm uppercase text-gray-500">
+                Or
+              </Text>
+              <Text className="mb-4 text-center text-sm text-gray-500">
+                Sign up with
+              </Text>
               <View className="flex-row justify-between">
                 <Pressable
                   onPress={() => handleOAuthSignIn("Google")}
-                  className="rounded-md border-2 border-gray-300 w-[45%]"
+                  className="w-[45%] rounded-md border-2 border-gray-300"
                 >
-                  <View className="flex justify-center items-center p-2">
-                    <Image className="w-4 h-4" source={icons.google} style={{ width: 16, height: 16 }} />
-                    <Text className="text-sm ml-2">Google</Text>
+                  <View className="flex items-center justify-center p-2">
+                    <Image
+                      className="h-4 w-4"
+                      source={icons.google}
+                      style={{ width: 16, height: 16 }}
+                    />
+                    <Text className="ml-2 text-sm">Google</Text>
                   </View>
                 </Pressable>
                 <Pressable
                   onPress={() => handleOAuthSignIn("Facebook")}
-                  className="rounded-md border-2 border-gray-300 w-[45%]"
+                  className="w-[45%] rounded-md border-2 border-gray-300"
                 >
-                  <View className="flex justify-center items-center p-2">
-                    <Image className="w-5 h-5 mr-3" source={icons.facebook} style={{ width: 20, height: 20 }} />
-                    <Text className="text-sm ml-2">Facebook</Text>
+                  <View className="flex items-center justify-center p-2">
+                    <Image
+                      className="mr-3 h-5 w-5"
+                      source={icons.facebook}
+                      style={{ width: 20, height: 20 }}
+                    />
+                    <Text className="ml-2 text-sm">Facebook</Text>
                   </View>
                 </Pressable>
               </View>
             </View>
 
-            <Text className="text-sm mt-4 text-[var(--gray)] text-center">
-              Already have an account? <Link className="underline" href={"/pages/(auth)/login"}>Sign in</Link>
+            <Text className="mt-4 text-center text-sm text-[var(--gray)]">
+              Already have an account?{" "}
+              <Link className="underline" href={"/pages/(auth)/login"}>
+                Sign in
+              </Link>
             </Text>
           </View>
         </KeyboardAvoidingView>
