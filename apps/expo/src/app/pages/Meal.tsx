@@ -132,6 +132,7 @@ const Meal = () => {
                                         <TouchableOpacity onPress={() => setCollectPoints(true)} className="green-bg-500 rounded-[8px] py-3 mb-2 mt-8"><Text className="text-center">Collect your points</Text></TouchableOpacity>
                                         :
                                         <View>
+                                        <TouchableOpacity onPress={() => router.push("/pages/Homepage")} className="border-2 rounded-[8px] py-3 mb-2 mt-8"><Text className="text-center">Go to home</Text></TouchableOpacity>
                                         <TouchableOpacity onPress={() => handleAdditionalSubmit()} className="green-bg-500 w-full py-3 rounded-[8px] mt-2"><Text className="text-center">Submit another meal log</Text></TouchableOpacity>
                                         </View>
                                     }
