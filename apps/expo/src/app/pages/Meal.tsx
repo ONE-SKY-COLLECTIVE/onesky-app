@@ -1,43 +1,19 @@
-import { use, useEffect, useRef, useState } from 'react';
-import { Image, Pressable, Text, TouchableOpacity, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
+import { useEffect, useRef, useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
-import ProgressBar from '../components/ProgressBar';
 import Completion from '../components/Completion';
+import ProgressBar from '../components/ProgressBar';
 
 const Meal = () => {
     const [totalMeals, setTotalMeals] = useState(0);
-    const [fulfilled, setFulfilled] = useState(false);
     const [collectPoints, setCollectPoints] = useState(false);
     const confettiAnimationRef = useRef<LottieView>(null);
     const [confirm, setConfirm] = useState(false);
     const [selectedMealId, setSelectedMealId] = useState<string | null>(null);
-
-    const dailyGoal = 3;
-    const router= useRouter();
-
-
-
-    const handleMealSelect = (mealTypeId: string) => {
-        setSelectedMealId(selectedMealId === mealTypeId ? null : mealTypeId);
-    };
-
-    const handleSubmit = () => {
-        if (selectedMealId) {
-            setTotalMeals(prevTotal => {
-                return prevTotal + 1;
-                // return newTotal;
-            });
-
-            if (confettiAnimationRef.current) {
-                confettiAnimationRef.current.play(0, 110);
-            }
-            setConfirm(true);
-        }
-    };
 
     const mealImages: Record<string, any> = {
         'vegan': require("../../../assets/images/vegan-meal.jpg"),
@@ -45,6 +21,34 @@ const Meal = () => {
         'flexitarian': require("../../../assets/images/flexitarian-meal.jpg"),
      };
 
+    const mealTypes = [
+        { id: 'vegan', title: 'Vegan', icon: require("../../../assets/icons/vegan-meal.png")},
+        { id: 'vegetarian', title: 'Vegetarian', icon: require("../../../assets/icons/vegetarian-meal.png")},
+        { id: 'flexitarian', title: 'Flexitarian', icon: require("../../../assets/icons/flexitarian-meal.png")},
+    ];
+
+    const dailyGoal = 3;
+    const router= useRouter();
+
+    const handleMealSelect = (mealTypeId: string) => {
+        setSelectedMealId(selectedMealId === mealTypeId ? null : mealTypeId);
+    };
+
+    const handleSubmit = () => {
+        if (selectedMealId) {
+            setConfirm(true);
+            setTotalMeals(prevTotal => prevTotal + 1);
+
+            if (confettiAnimationRef.current) {
+                confettiAnimationRef.current.play(0, 110);
+            }
+        }
+    };
+
+    const handleAdditionalSubmit = () => {
+        setConfirm(false);
+        setSelectedMealId(null);
+    };
 
     useEffect(() => {
         if (confettiAnimationRef.current) {
@@ -128,8 +132,7 @@ const Meal = () => {
                                         <TouchableOpacity onPress={() => setCollectPoints(true)} className="green-bg-500 rounded-[8px] py-3 mb-2 mt-8"><Text className="text-center">Collect your points</Text></TouchableOpacity>
                                         :
                                         <View>
-                                        <TouchableOpacity onPress={() => router.push("/pages/Homepage")} className="border-2 rounded-[8px] py-3 mb-2 mt-8"><Text className="text-center">Go to home</Text></TouchableOpacity>
-                                        <TouchableOpacity onPress={() => setConfirm(false)} className="green-bg-500 w-full py-3 rounded-[8px] mt-2"><Text className="text-center">Submit another meal log</Text></TouchableOpacity>
+                                        <TouchableOpacity onPress={() => handleAdditionalSubmit()} className="green-bg-500 w-full py-3 rounded-[8px] mt-2"><Text className="text-center">Submit another meal log</Text></TouchableOpacity>
                                         </View>
                                     }
                                 </View>
@@ -151,12 +154,6 @@ const Meal = () => {
 }
 
 const styles = StyleSheet.create({
-    refillAnimation: {
-        height: 400,
-        width: '100%',
-        padding: 0,
-        margin: 0,
-    },
     confettiAnimation: {
         height: 400,
         width: '100%',
@@ -168,13 +165,6 @@ const styles = StyleSheet.create({
         zIndex: -1000
     }
   });
-
-const mealTypes = [
-    { id: 'vegan', title: 'Vegan', icon: require("../../../assets/icons/vegan-meal.png")},
-    { id: 'vegetarian', title: 'Vegetarian', icon: require("../../../assets/icons/vegetarian-meal.png")},
-    { id: 'flexitarian', title: 'Flexitarian', icon: require("../../../assets/icons/flexitarian-meal.png")},
-]
-
 
 
 export default Meal
