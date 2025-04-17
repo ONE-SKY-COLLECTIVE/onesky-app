@@ -15,6 +15,9 @@ const Meal = () => {
     const [confirm, setConfirm] = useState(false);
     const [selectedMealId, setSelectedMealId] = useState<string | null>(null);
 
+    const dailyGoal = 3;
+    const router= useRouter();
+
     const mealImages: Record<string, any> = {
         'vegan': require("../../../assets/images/vegan-meal.jpg"),
         'vegetarian': require("../../../assets/images/vegetarian-meal.jpg"),
@@ -26,9 +29,6 @@ const Meal = () => {
         { id: 'vegetarian', title: 'Vegetarian', icon: require("../../../assets/icons/vegetarian-meal.png")},
         { id: 'flexitarian', title: 'Flexitarian', icon: require("../../../assets/icons/flexitarian-meal.png")},
     ];
-
-    const dailyGoal = 3;
-    const router= useRouter();
 
     const handleMealSelect = (mealTypeId: string) => {
         setSelectedMealId(selectedMealId === mealTypeId ? null : mealTypeId);
