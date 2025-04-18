@@ -11,20 +11,20 @@ const MealCard = () => {
     };
 
   return (
-  <View className="flex-1 flex-col gap-4">
-                {mealTypes.map((mealType) => (
-                    <Pressable
-                        key={mealType.id}
-                        onPress={() => handleMealSelect(mealType.id)}
-                        className={`flex-1 size-8 flex justify-center items-center rounded-xl ${selectedMealId !== mealType.id ? 'bg-white' : 'green-bg-50'} w-full h-full border border-[#D9EBB2]`}
-                        >
-                            <View className={`absolute left-4 top-4 size-4 rounded-full ${selectedMealId !== mealType.id ? 'border border-[#E7E5E4]' : 'border-[2px] border-[#A1CE3F]'}`} />
-                            <Image resizeMode="contain" source={mealType.icon} className="size-[100px]"/>
-                            <Text className="text-sm font-semibold">{mealType.title}</Text>
-                    </Pressable>
-                ))}
-                <TouchableOpacity disabled={!selectedMealId} className={`w-full py-3 rounded-lg ${!selectedMealId ? "opacity-50 disabled-bg" : "green-bg-500"}`}><Text className="text-center">Submit</Text></TouchableOpacity>
-            </View>
+    <View className="flex-1 flex-col gap-4">
+        {mealTypes.map((mealType) => (
+            <Pressable
+                key={mealType.id}
+                onPress={() => handleMealSelect(mealType.id)}
+                className={`flex-1 size-8 flex justify-center items-center rounded-xl ${selectedMealId !== mealType.id ? 'bg-white' : 'green-bg-50'} w-full h-full border border-[#D9EBB2]`}
+                >
+                    <View className={`absolute left-4 top-4 size-4 rounded-full ${selectedMealId !== mealType.id ? 'border border-[#E7E5E4]' : 'border-[2px] border-[#A1CE3F]'}`} />
+                    <Image resizeMode="contain" source={mealType.icon} className="size-[100px]"/>
+                    <Text className="text-sm font-semibold">{mealType.title}</Text>
+            </Pressable>
+        ))}
+        <TouchableOpacity disabled={!selectedMealId} className={`w-full py-3 rounded-lg ${!selectedMealId ? "opacity-50 disabled-bg" : "green-bg-500"}`}><Text className="text-center">Submit</Text></TouchableOpacity>
+    </View>
   )
 }
 
