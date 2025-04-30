@@ -1,13 +1,12 @@
 import { useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
-import { useEffect, useRef, useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { use, useEffect, useRef, useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View, AsyncStorage } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
 import Completion from '../components/Completion';
 import ProgressBar from '../components/ProgressBar';
-import { rem } from "react-native-css-interop";
 
 const Meal = () => {
     const [totalMeals, setTotalMeals] = useState(0);
@@ -16,10 +15,21 @@ const Meal = () => {
     const [confirm, setConfirm] = useState<boolean>(false);
     const [selectedMealId, setSelectedMealId] = useState<string | null>(null);
     const [remindMeMealLog, setRemindMeMealLog] = useState<boolean>(false);
+    const [remindMe, setRemindMe] = useState<boolean>(false);
+    const [checked, setChecked] = useState<boolean>(false);
 
     const dailyGoal = 3;
     const router= useRouter();
 
+    useEffect(() => {
+        const checkRemindMeMealLog = async () => {
+            const remindMeMealLogValue = await AsyncStorage.getItem('remindMeMealLog');
+            if (remindMeMealLogValue) {
+                setRemindMe(true);
+            }
+        };
+        checkRemindMeMealLog();
+    }, []);
     const mealImages: Record<string, any> = {
         'vegan': require("../../../assets/images/vegan-meal.jpg"),
         'vegetarian': require("../../../assets/images/vegetarian-meal.jpg"),
@@ -37,6 +47,13 @@ const Meal = () => {
         { id: 'vegetarian', title: 'Vegetarian', icon: require("../../../assets/icons/vegetarian-meal.png"), description: "It only takes 25 gallons of water to produce 1 pound of wheat, but 2500 gallons to produce 1 pound of meat."},
         { id: 'flexitarian', title: 'Flexitarian', icon: require("../../../assets/icons/flexitarian-meal.png"), description: "1.3 billion people could be fed by the grain that is currently being fed to livestock for meat production."},
     ];
+
+    const toggleCheckbox = async () => {
+        setChecked(!checked);
+        if (checked) {
+            await AsyncStorage.setItem('remindMeMealLog');
+        }
+    };
 
     const handleMealSelect = (mealTypeId: string) => {
         setSelectedMealId(selectedMealId === mealTypeId ? null : mealTypeId);
@@ -77,7 +94,7 @@ const Meal = () => {
 
       <View className="meals flex-1">
           <SafeAreaView className="h-full w-full relative" edges={["top", "bottom"]}>
-            {!remindMeMealLog ? (
+            {!remindMeMealLog && !remindMe ? (
                 <View className='absolute bg-[#C4EFF7] h-36 w-screen inset-0  rounded-b-[36px]'>
                     <Pressable
                         className='w-full flex flex-row justify-start items-center absolute left-5 bottom-5 cursor-pointer'
@@ -92,19 +109,31 @@ const Meal = () => {
                     <ProgressBar progression={totalMeals} numProgressions={3} points={50} />
                 </View>
             )}
-            {!remindMeMealLog && (
-                <View className="flex-1 gap-4 mt-36 w-11/12 mx-auto">
+            {!remindMeMealLog &&!remindMe && (
+                <View className="flex-1 gap-4 mt-32 w-11/12 mx-auto">
                     <Image resizeMode="contain" source={require("../../../assets/images/plates.png")} className="w-full h-80" />
                     <Text className='text-left text-2xl font-bold mt-12'>Track your meals</Text>
                     {trackYourMealInformation.map((item) => (
-                        <View key={item.id} className='flex flex-row justify-start items-center w-11/12'>
+                        <View key={item.id} className='flex flex-row justify-start items-center w-11/12 my-2'>
                             <Image resizeMode="contain" source={item.icon} className="size-6"/>
                             <Text className='text-left text-lg leading-tight ml-4'>{item.description}</Text>
                         </View>
                     ))}
-                    <View className="mt-8">
+                    <View className="absolute bottom-20 flex-row items-center">
+                        <Pressable
+                            onPress={toggleCheckbox}
+                            className={`h-6 w-6 items-center justify-center rounded-md border ${
+                            checked ? 'bg-blue-500 border-blue-600' : 'bg-white border-gray-300'
+                            }`}
+                        >
+                            {checked && (
+                            <Text className="text-white font-bold">✓</Text>
+                            )}
+                        </Pressable>
 
-                        <Text className='text-left text-lg leading-tight'>Got it! No need to remind me again</Text>
+                        <Text className="ml-3 text-left text-lg leading-tight">
+                            Got it! No need to remind me again
+                        </Text>
                     </View>
                     <TouchableOpacity
                         onPress={() => handleRemindMe()}
@@ -114,7 +143,7 @@ const Meal = () => {
                     </TouchableOpacity>
                 </View>
             )}
-            {!confirm && remindMeMealLog && (
+            {!confirm && remindMe && (
                 <>
                     <View className='mt-8 mx-4'>
                         <Text className="text-[20px] font-semibold sora py-5">Select the type of meal</Text>
