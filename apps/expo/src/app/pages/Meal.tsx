@@ -94,18 +94,21 @@ const Meal = () => {
             )}
             {!remindMeMealLog && (
                 <View className="flex-1 gap-4 mt-36 w-11/12 mx-auto">
-                        <Image resizeMode="contain" source={require("../../../assets/images/plates.png")} className="w-full h-80" />
-                        <Text className='text-left text-2xl font-bold mt-12'>Track your meals</Text>
-                        {trackYourMealInformation.map((item) => (
-                            <View key={item.id} className='flex flex-row justify-start items-center w-11/12 mt-4'>
-                                <Image resizeMode="contain" source={item.icon} className="size-6"/>
-                                <Text className='text-left text-lg leading-tight ml-4'>{item.description}</Text>
-                            </View>
-                        ))}
+                    <Image resizeMode="contain" source={require("../../../assets/images/plates.png")} className="w-full h-80" />
+                    <Text className='text-left text-2xl font-bold mt-12'>Track your meals</Text>
+                    {trackYourMealInformation.map((item) => (
+                        <View key={item.id} className='flex flex-row justify-start items-center w-11/12'>
+                            <Image resizeMode="contain" source={item.icon} className="size-6"/>
+                            <Text className='text-left text-lg leading-tight ml-4'>{item.description}</Text>
+                        </View>
+                    ))}
+                    <View className="mt-8">
 
+                        <Text className='text-left text-lg leading-tight'>Got it! No need to remind me again</Text>
+                    </View>
                     <TouchableOpacity
                         onPress={() => handleRemindMe()}
-                        className={`w-full py-3 rounded-lg ${"green-bg-500"}`}
+                        className={`w-full py-3 rounded-lg ${"green-bg-500"} absolute bottom-0`}
                         >
                         <Text className="text-center">Get started</Text>
                     </TouchableOpacity>
