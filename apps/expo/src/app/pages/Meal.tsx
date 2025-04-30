@@ -7,13 +7,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import Completion from '../components/Completion';
 import ProgressBar from '../components/ProgressBar';
+import { rem } from "react-native-css-interop";
 
 const Meal = () => {
     const [totalMeals, setTotalMeals] = useState(0);
-    const [collectPoints, setCollectPoints] = useState(false);
+    const [collectPoints, setCollectPoints] = useState<boolean>(false);
     const confettiAnimationRef = useRef<LottieView>(null);
-    const [confirm, setConfirm] = useState(false);
+    const [confirm, setConfirm] = useState<boolean>(false);
     const [selectedMealId, setSelectedMealId] = useState<string | null>(null);
+    const [remindMeMealLog, setRemindMeMealLog] = useState<boolean>(false);
 
     const dailyGoal = 3;
     const router= useRouter();
@@ -23,6 +25,12 @@ const Meal = () => {
         'vegetarian': require("../../../assets/images/vegetarian-meal.jpg"),
         'flexitarian': require("../../../assets/images/flexitarian-meal.jpg"),
      };
+
+     const trackYourMealInformation = [
+         { id: 'thecloud', icon: require("../../../assets/icons/thecloud.png"), description: "Help to reduce carbon footprint by lowering your meat intake."},
+         { id: 'star', icon: require("../../../assets/icons/star.png"), description: "Log your meal 3x a day and earn maximum points."},
+         { id: 'planet', icon: require("../../../assets/icons/planet.png"), description: "Join the One Sky community in making a difference for our environment."},
+     ];
 
     const mealTypes = [
         { id: 'vegan', title: 'Vegan', icon: require("../../../assets/icons/vegan-meal.png"), description: "Eating a vegan diet can reduce your carbon footprint by 73%, save water, forests and hundreds of animals a year."},
@@ -45,6 +53,11 @@ const Meal = () => {
         }
     };
 
+    const handleRemindMe = () => {
+        setRemindMeMealLog(true);
+
+    }
+
     const handleAdditionalSubmit = () => {
         setConfirm(false);
         setSelectedMealId(null);
@@ -60,14 +73,45 @@ const Meal = () => {
      if (collectPoints) {
          return <Completion points={50} activityName="meal log" />
      }
-
   return (
-    <View className='meals'>
-        <SafeAreaView className="h-full" edges={["top", "bottom"]}>
-            <View className='w-screen'>
-                <ProgressBar progression={totalMeals} numProgressions={3} points={50} />
-            </View>
-            {!confirm && (
+
+      <View className="meals flex-1">
+          <SafeAreaView className="h-full w-full relative" edges={["top", "bottom"]}>
+            {!remindMeMealLog ? (
+                <View className='absolute bg-[#C4EFF7] h-36 w-screen inset-0  rounded-b-[36px]'>
+                    <Pressable
+                        className='w-full flex flex-row justify-start items-center absolute left-5 bottom-5 cursor-pointer'
+                        onPress={() => router.push("/pages/Homepage")}
+                    >
+                        <Image resizeMode="contain" source={require("../../../assets/icons/arrow.png")} />
+                        <Text className='text-left text-lg'>Log your meal</Text>
+                    </Pressable>
+                </View>
+            ) : (
+                <View className='w-full'>
+                    <ProgressBar progression={totalMeals} numProgressions={3} points={50} />
+                </View>
+            )}
+            {!remindMeMealLog && (
+                <View className="flex-1 gap-4 mt-36 w-11/12 mx-auto">
+                        <Image resizeMode="contain" source={require("../../../assets/images/plates.png")} className="w-full h-80" />
+                        <Text className='text-left text-2xl font-bold mt-12'>Track your meals</Text>
+                        {trackYourMealInformation.map((item) => (
+                            <View key={item.id} className='flex flex-row justify-start items-center w-11/12 mt-4'>
+                                <Image resizeMode="contain" source={item.icon} className="size-6"/>
+                                <Text className='text-left text-lg leading-tight ml-4'>{item.description}</Text>
+                            </View>
+                        ))}
+
+                    <TouchableOpacity
+                        onPress={() => handleRemindMe()}
+                        className={`w-full py-3 rounded-lg ${"green-bg-500"}`}
+                        >
+                        <Text className="text-center">Get started</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+            {!confirm && remindMeMealLog && (
                 <>
                     <View className='mt-8 mx-4'>
                         <Text className="text-[20px] font-semibold sora py-5">Select the type of meal</Text>
@@ -140,10 +184,9 @@ const Meal = () => {
                     </View>
                 </>
             )}
-
-        </SafeAreaView>
-    </View>
-  )
+            </SafeAreaView>
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
