@@ -112,7 +112,7 @@ function MobileAuth() {
   const signOut = useSignOut();
 
   return (
-    <>
+    <View>
       <Text className="pb-2 text-center text-xl font-semibold text-white">
         {user?.name ?? "Not logged in"}
       </Text>
@@ -121,7 +121,7 @@ function MobileAuth() {
         title={user ? "Sign Out" : "Sign In With Discord"}
         color={"#5B65E9"}
       />
-    </>
+    </View>
   );
 }
 

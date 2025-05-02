@@ -78,22 +78,21 @@ export default function ExpoForm() {
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-[#C4EFF7]">
-      <View className="z-20 block p-4" style={{ marginTop: 20 }}>
-        <Link href={"/pages/(auth)/login"}>
-          <Image
-            source={icons.back}
-            contentFit="cover"
-            style={{ width: 20, height: 20 }}
-          />
-        </Link>
-      </View>
-
-      <View style={{ height: 400, position: "relative" }}>
-        <Image
+    <SafeAreaView edges={["top"]} className="entire-screen bg-[#C4EFF7]">
+      <View style={{position: 'relative'}} className="flex-col h-full justify-between">
+        <View className="z-20 block p-4">
+          <Link href={"/pages/(auth)/login"}>
+            <Image
+              source={icons.back}
+              contentFit="cover"
+              style={{ width: 20, height: 20 }}
+            />
+          </Link>
+        </View>
+        <Image 
           source={icons.forgot}
           contentFit="contain"
-          style={{ width: 370, height: 400 }}
+          style={{ width: '100%', height: 500, position: 'absolute', top: 50}}
         />
 
         <KeyboardAvoidingView
@@ -104,17 +103,17 @@ export default function ExpoForm() {
           ]}
         >
           <View
-            className="h-[40vh] rounded-t-3xl bg-white p-3"
+            className="h-fit rounded-t-3xl bg-white p-3 w-full pb-[80px]" 
             style={{ marginTop: keyboardVisible ? -80 : -40 }}
           >
-            <View className="my-4">
+            <View className="mt-4">
               <Text
                 style={{ fontFamily: "Raleway" }}
-                className="mb-2 text-xl font-bold"
+                className="mb-4 text-[20px] font-bold"
               >
                 Forgot password?
               </Text>
-              <Text>
+              <Text className="gray-800">
                 Enter your email and we’ll send you a password reset link to
                 your email.
               </Text>
@@ -123,7 +122,7 @@ export default function ExpoForm() {
             {/* Reusable Input Fields */}
             {formFields.map(
               ({ key, label, placeholder, icon, secure }, index) => (
-                <View key={index} className="mb-4">
+                <View key={index} className="mt-[30px] mb-[40px]">
                   <Text className="mb-1 text-sm text-[#7B7B7B]">{label}</Text>
 
                   <View
@@ -144,7 +143,7 @@ export default function ExpoForm() {
                       name={key as keyof FormData}
                       render={({ field: { onChange, value } }) => (
                         <TextInput
-                          className="ml-2 flex-1 text-sm text-black focus:border-none"
+                          className="ml-2 flex-1 text-sm text-black focus:border-none p-2"
                           placeholder={placeholder}
                           placeholderTextColor="#B3B3B3"
                           secureTextEntry={secure}

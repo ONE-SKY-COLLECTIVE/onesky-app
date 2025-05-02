@@ -8,16 +8,17 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import ActivityBox from "../components/ActivityBox";
 import NavBar from "../components/NavBar";
 
 export default function Homepage() {
+
   const [contentSelect, setContentSelect] = useState(0);
   const activities = [
     { id: "Quiz", title: "Quiz", inactive: false },
     { id: "2", title: "Log your meal", inactive: true },
     { id: "Waterbottle", title: "Water refill", inactive: false },
+
     { id: "3", title: "View to plant", inactive: true },
     { id: "4", title: "Steps", inactive: true },
     { id: "Activities", title: "View more...", inactive: false },

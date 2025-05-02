@@ -27,8 +27,9 @@ const success = () => {
         <Link
           className="text-center text-[#797C7C] underline"
           href={"/pages/(auth)/set-password"}
-        >
+        ><Text>
           Click here to resend
+          </Text>
         </Link>
       </View>
     </SafeAreaView>

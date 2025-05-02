@@ -121,8 +121,8 @@ export default function ExpoForm() {
           source={icons.register}
           alt="Hero image"
           contentFit="cover"
-          style={{ width: 360, height: 100 }}
-          className="z-10 block w-full"
+          style={{ width: '100%', height: 100 }}
+          className="z-10 block w-full absolute"
         />
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -165,7 +165,7 @@ export default function ExpoForm() {
                       name={key as keyof FormData}
                       render={({ field: { onChange, value } }) => (
                         <TextInput
-                          className="ml-2 flex-1 text-sm text-black focus:border-none"
+                          className="ml-2 flex-1 text-sm text-black focus:border-none p-2"
                           placeholder={placeholder}
                           placeholderTextColor="#B3B3B3"
                           secureTextEntry={secure}
@@ -210,7 +210,7 @@ export default function ExpoForm() {
               <View className="flex-row justify-between">
                 <Pressable
                   onPress={() => handleOAuthSignIn("Google")}
-                  className="w-[45%] rounded-md border-2 border-gray-300"
+                  className="w-[31%] rounded-md border-2 border-gray-300"
                 >
                   <View className="flex items-center justify-center p-2">
                     <Image
@@ -223,7 +223,7 @@ export default function ExpoForm() {
                 </Pressable>
                 <Pressable
                   onPress={() => handleOAuthSignIn("Facebook")}
-                  className="w-[45%] rounded-md border-2 border-gray-300"
+                  className="w-[31%] rounded-md border-2 border-gray-300"
                 >
                   <View className="flex items-center justify-center p-2">
                     <Image
@@ -234,6 +234,20 @@ export default function ExpoForm() {
                     <Text className="ml-2 text-sm">Facebook</Text>
                   </View>
                 </Pressable>
+                <Pressable
+                  onPress={() => handleOAuthSignIn("Apple")}
+                  className="w-[31%] rounded-md border-2 border-gray-300"
+                >
+                  <View className="flex items-center justify-center p-2">
+                    <Image
+                      className="mr-3 h-5 w-5"
+                      source={icons.apple}
+                      style={{ width: 20, height: 20 }}
+                    />
+                    <Text className="ml-2 text-sm">Apple</Text>
+                  </View>
+                </Pressable>
+                
               </View>
             </View>
 

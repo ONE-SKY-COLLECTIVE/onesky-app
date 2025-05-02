@@ -65,23 +65,22 @@ export default function ExpoForm() {
   ];
 
   return (
-    <SafeAreaView className="flex-1 justify-between bg-[#C4EFF7]">
+    <SafeAreaView edges={['top']} className="flex-1 justify-between bg-[#C4EFF7]">
+
       <View style={{ marginTop: 50 }}>
-        {" "}
-        {/* Added margin top here */}
         <Image
           source={icons.login}
           contentFit="contain"
-          style={{ width: 370, height: 246.4 }}
+          style={{ width: 370, height: 450 }}
           className="z-10 block"
         />
       </View>
       <View
-        className="z-20 rounded-t-3xl bg-white p-4"
+        className="z-20 rounded-t-3xl bg-white p-4 pb-12"
         style={{ marginTop: -400 }}
       >
-        {" "}
         {/* Adjust marginTop to overlap */}
+
         <Text
           style={{ fontFamily: "Raleway" }}
           className="mb-4 text-xl font-bold"
@@ -100,7 +99,6 @@ export default function ExpoForm() {
               }`}
             >
               <Image
-                className="h-4 w-4"
                 source={icon}
                 alt="An icon"
                 style={{ width: 16, height: 16 }}
@@ -110,7 +108,7 @@ export default function ExpoForm() {
                 name={key as keyof FormData}
                 render={({ field: { onChange, value } }) => (
                   <TextInput
-                    className="ml-2 flex-1 text-sm text-black focus:border-none"
+                    className="ml-2 flex-1 text-sm text-black focus:border-none p-2"
                     placeholder={placeholder}
                     placeholderTextColor="#B3B3B3"
                     secureTextEntry={secure}
@@ -158,7 +156,7 @@ export default function ExpoForm() {
           <View className="flex-row justify-between">
             <Pressable
               onPress={() => handleOAuthSignIn("Google")}
-              className="w-[45%] rounded-md border-2 border-gray-300"
+              className="w-[31%] rounded-md border-2 border-gray-300"
             >
               <View className="flex items-center justify-center p-2">
                 <Image
@@ -171,7 +169,7 @@ export default function ExpoForm() {
             </Pressable>
             <Pressable
               onPress={() => handleOAuthSignIn("Facebook")}
-              className="w-[45%] rounded-md border-2 border-gray-300"
+              className="w-[31%] rounded-md border-2 border-gray-300"
             >
               <View className="flex items-center justify-center p-2">
                 <Image
@@ -182,6 +180,20 @@ export default function ExpoForm() {
                 <Text className="ml-2 text-sm">Facebook</Text>
               </View>
             </Pressable>
+            <Pressable
+              onPress={() => handleOAuthSignIn("Apple")}
+              className="w-[31%] rounded-md border-2 border-gray-300"
+            >
+              <View className="flex items-center justify-center p-2">
+                <Image
+                  className="mr-3 h-5 w-5"
+                  source={icons.apple}
+                  style={{ width: 20, height: 20 }}
+                />
+                <Text className="ml-2 text-sm">Apple</Text>
+              </View>
+            </Pressable>
+            
           </View>
         </View>
         <Text className="mt-2.5 text-center text-sm text-[var(--gray)]">
