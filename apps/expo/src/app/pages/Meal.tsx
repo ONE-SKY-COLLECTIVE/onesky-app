@@ -1,8 +1,9 @@
 import { useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
-import { use, useEffect, useRef, useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View, AsyncStorage } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as SecureStore from 'expo-secure-store';
 
 
 import Completion from '../components/Completion';
@@ -22,14 +23,27 @@ const Meal = () => {
     const router= useRouter();
 
     useEffect(() => {
-        const checkRemindMeMealLog = async () => {
-            const remindMeMealLogValue = await AsyncStorage.getItem('remindMeMealLog');
-            if (remindMeMealLogValue) {
-                setRemindMe(true);
+        // const removeRemindMeItem = async () => {
+        //     try {
+        //       await SecureStore.deleteItemAsync('remindMeMealLog');
+        //       console.log('Value removed from SecureStore');
+        //     } catch (error) {
+        //       console.error('Error removing value from SecureStore:', error);
+        //     }
+        //   };
+        // removeRemindMeItem();
+        const checkRemindMeMealLog = () => {
+            try {
+                const value = SecureStore.getItem('remindMeMealLog');
+                setRemindMe(!!value);
+            } catch (error) {
+                console.error('Error reading from SecureStore:', error);
             }
         };
+
         checkRemindMeMealLog();
     }, []);
+
     const mealImages: Record<string, any> = {
         'vegan': require("../../../assets/images/vegan-meal.jpg"),
         'vegetarian': require("../../../assets/images/vegetarian-meal.jpg"),
@@ -48,11 +62,12 @@ const Meal = () => {
         { id: 'flexitarian', title: 'Flexitarian', icon: require("../../../assets/icons/flexitarian-meal.png"), description: "1.3 billion people could be fed by the grain that is currently being fed to livestock for meat production."},
     ];
 
-    const toggleCheckbox = async () => {
-        setChecked(!checked);
-        if (checked) {
-            await AsyncStorage.setItem('remindMeMealLog');
-        }
+    const toggleCheckbox = () => {
+        setChecked(prevChecked => {
+            const newValue = !prevChecked
+
+            return newValue && newValue;
+        });
     };
 
     const handleMealSelect = (mealTypeId: string) => {
@@ -70,10 +85,18 @@ const Meal = () => {
         }
     };
 
-    const handleRemindMe = () => {
+    const handleRemindMe = async () => {
+        if (checked) {
+            try {
+                SecureStore.setItem('remindMeMealLog', 'true');
+                console.log('Value saved to SecureStore');
+            } catch (error) {
+                console.error('Error saving to SecureStore:', error);
+            }
+        }
         setRemindMeMealLog(true);
+    };
 
-    }
 
     const handleAdditionalSubmit = () => {
         setConfirm(false);
@@ -109,7 +132,7 @@ const Meal = () => {
                     <ProgressBar progression={totalMeals} numProgressions={3} points={50} />
                 </View>
             )}
-            {!remindMeMealLog &&!remindMe && (
+            {!remindMeMealLog && !remindMe && (
                 <View className="flex-1 gap-4 mt-32 w-11/12 mx-auto">
                     <Image resizeMode="contain" source={require("../../../assets/images/plates.png")} className="w-full h-80" />
                     <Text className='text-left text-2xl font-bold mt-12'>Track your meals</Text>
@@ -121,7 +144,7 @@ const Meal = () => {
                     ))}
                     <View className="absolute bottom-20 flex-row items-center">
                         <Pressable
-                            onPress={toggleCheckbox}
+                            onPress={() => toggleCheckbox()}
                             className={`h-6 w-6 items-center justify-center rounded-md border ${
                             checked ? 'bg-blue-500 border-blue-600' : 'bg-white border-gray-300'
                             }`}
@@ -143,7 +166,7 @@ const Meal = () => {
                     </TouchableOpacity>
                 </View>
             )}
-            {!confirm && remindMe && (
+            {!confirm && (remindMeMealLog || remindMe) && (
                 <>
                     <View className='mt-8 mx-4'>
                         <Text className="text-[20px] font-semibold sora py-5">Select the type of meal</Text>
@@ -170,7 +193,7 @@ const Meal = () => {
                     </View>
                 </>
             )}
-            {confirm && (
+            {confirm && (remindMeMealLog || remindMe) && (
                 <>
                     <Image resizeMode="center" source={selectedMealId ? mealImages[selectedMealId] : undefined} className="w-full"/>
                     <View className='mx-auto w-10/12 -mt-36'>
