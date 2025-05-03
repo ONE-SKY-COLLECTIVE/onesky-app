@@ -18,6 +18,8 @@ const Meal = () => {
     const [remindMeMealLog, setRemindMeMealLog] = useState<boolean>(false);
     const [remindMe, setRemindMe] = useState<boolean>(false);
     const [checked, setChecked] = useState<boolean>(false);
+    const [exitWithoutMealLog, setExitWithoutMealLog] = useState<boolean>(false);
+
 
     const dailyGoal = 3;
     const router= useRouter();
@@ -34,8 +36,7 @@ const Meal = () => {
         // removeRemindMeItem();
         const checkRemindMeMealLog = () => {
             try {
-                const value = SecureStore.getItem('remindMeMealLog');
-                setRemindMe(!!value);
+                setRemindMe(!!SecureStore.getItem('remindMeMealLog'));
             } catch (error) {
                 console.error('Error reading from SecureStore:', error);
             }
@@ -45,9 +46,9 @@ const Meal = () => {
     }, []);
 
     const mealImages: Record<string, any> = {
-        'vegan': require("../../../assets/images/vegan-meal.jpg"),
-        'vegetarian': require("../../../assets/images/vegetarian-meal.jpg"),
-        'flexitarian': require("../../../assets/images/flexitarian-meal.jpg"),
+        'vegan': require("../../../assets/images/vegan-meal.png"),
+        'vegetarian': require("../../../assets/images/vegetarian-meal.png"),
+        'flexitarian': require("../../../assets/images/flexitarian-meal.png"),
      };
 
      const trackYourMealInformation = [
@@ -57,9 +58,9 @@ const Meal = () => {
      ];
 
     const mealTypes = [
-        { id: 'vegan', title: 'Vegan', icon: require("../../../assets/icons/vegan-meal.png"), description: "Eating a vegan diet can reduce your carbon footprint by 73%, save water, forests and hundreds of animals a year."},
-        { id: 'vegetarian', title: 'Vegetarian', icon: require("../../../assets/icons/vegetarian-meal.png"), description: "It only takes 25 gallons of water to produce 1 pound of wheat, but 2500 gallons to produce 1 pound of meat."},
-        { id: 'flexitarian', title: 'Flexitarian', icon: require("../../../assets/icons/flexitarian-meal.png"), description: "1.3 billion people could be fed by the grain that is currently being fed to livestock for meat production."},
+        { id: 'vegan', title: 'Vegan meal:', icon: require("../../../assets/icons/vegan-meal.png"), description: "You’re a star! Switching to a vegan diet slashes greenhouse gas and land use by up to 75%, also uses 54% less water than meat-based meals."},
+        { id: 'vegetarian', title: 'Vegetarian meal:', icon: require("../../../assets/icons/vegetarian-meal.png"), description: "Way to go! Vegetarian diets produce about 50% fewer greenhouse gases, require 27% less energy, and leave a 41.5% smaller environmental footprint compared to meat-based meals"},
+        { id: 'flexitarian', title: 'Flexitarian meal:', icon: require("../../../assets/icons/flexitarian-meal.png"), description: "Great work! By swapping out your red meat, you have helped reduce our reliance on cattle farming which releases 74.5 million tons of methane, which is 30x more potent than CO2, each year."},
     ];
 
     const toggleCheckbox = () => {
@@ -70,6 +71,9 @@ const Meal = () => {
         });
     };
 
+    const handleContinueMealLog = () => {
+        setExitWithoutMealLog(false);
+    }
     const handleMealSelect = (mealTypeId: string) => {
         setSelectedMealId(selectedMealId === mealTypeId ? null : mealTypeId);
     };
@@ -89,7 +93,6 @@ const Meal = () => {
         if (checked) {
             try {
                 SecureStore.setItem('remindMeMealLog', 'true');
-                console.log('Value saved to SecureStore');
             } catch (error) {
                 console.error('Error saving to SecureStore:', error);
             }
@@ -102,6 +105,14 @@ const Meal = () => {
         setConfirm(false);
         setSelectedMealId(null);
     };
+
+    const handleExitWithoutMealLog = () => {
+        if (!confirm && (remindMeMealLog || remindMe) && !exitWithoutMealLog ) {
+            setExitWithoutMealLog(true);
+        }  else {
+            router.push("/pages/Homepage");
+        }
+    }
 
     useEffect(() => {
         if (confettiAnimationRef.current) {
@@ -129,7 +140,7 @@ const Meal = () => {
                 </View>
             ) : (
                 <View className='w-full'>
-                    <ProgressBar progression={totalMeals} numProgressions={3} points={50} />
+                    <ProgressBar progression={totalMeals} numProgressions={3} points={50} utility={handleExitWithoutMealLog}/>
                 </View>
             )}
             {!remindMeMealLog && !remindMe && (
@@ -193,11 +204,16 @@ const Meal = () => {
                     </View>
                 </>
             )}
+
+
             {confirm && (remindMeMealLog || remindMe) && (
                 <>
-                    <Image resizeMode="center" source={selectedMealId ? mealImages[selectedMealId] : undefined} className="w-full"/>
-                    <View className='mx-auto w-10/12 -mt-36'>
-                        <Text className='text-center'>{selectedMealId ? mealTypes.find(meal => meal.id === selectedMealId)?.description : undefined}</Text>
+                    <Image resizeMode="contain" source={selectedMealId ? mealImages[selectedMealId] : undefined} className="w-3/5 mx-auto"/>
+                    <View className='mx-auto w-10/12 -mt-12'>
+                        <Text className='text-center text-4xl'>{selectedMealId ? mealTypes.find(meal => meal.id === selectedMealId)?.title : undefined}</Text>
+                    </View>
+                    <View className='mx-auto w-10/12 mt-4'>
+                        <Text className='text-center text-xl'>{selectedMealId ? mealTypes.find(meal => meal.id === selectedMealId)?.description : undefined}</Text>
                     </View>
                     <View className={`${confirm ? "refill-div-confirm" : ""} refill-div `}>
                         <View className="yellow-bg-500 rounded-[100px] p-3 text-[12px] fit-width self-start">
@@ -239,6 +255,25 @@ const Meal = () => {
                     </View>
                 </>
             )}
+
+            {exitWithoutMealLog && (
+                <View className="refill-div">
+                    <View className="flex items-center">
+                        <Image resizeMode="contain" source={require("../../../assets/icons/warning.png")} className="w-[40px] h-[40px]"/>
+                        <Text className="text-[20px] font-semibold sora py-5">
+                            Don't leave us!
+                        </Text>
+                    </View>
+                    <Text className="text-[14px] raleway w-half">Don’t leave us yet without logging your meal.</Text>
+                    <Image resizeMode="contain" source={require("../../../assets/icons/leave-icon.png")} className="absolute h-[100px] w-[100px] left-3/4 top-[20px]"/>
+
+                    <View>
+                        <TouchableOpacity onPress={() => router.push("/pages/Homepage")} className="border-2 rounded-[8px] py-3 mb-2 mt-8"><Text className="text-center">Quit</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={handleContinueMealLog} className="green-bg-500 w-full py-3 rounded-[8px] mt-2"><Text className="text-center">Continue logging</Text></TouchableOpacity>
+                    </View>
+                </View>
+            )}
+
             </SafeAreaView>
         </View>
     )
