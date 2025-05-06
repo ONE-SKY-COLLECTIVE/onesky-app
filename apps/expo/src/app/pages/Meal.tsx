@@ -10,7 +10,7 @@ import Completion from '../components/Completion';
 import ProgressBar from '../components/ProgressBar';
 
 const Meal = () => {
-    const [totalMeals, setTotalMeals] = useState(0);
+    const [totalMeals, setTotalMeals] = useState<number>(0);
     const [collectPoints, setCollectPoints] = useState<boolean>(false);
     const confettiAnimationRef = useRef<LottieView>(null);
     const [confirm, setConfirm] = useState<boolean>(false);
@@ -67,7 +67,7 @@ const Meal = () => {
         setChecked(prevChecked => {
             const newValue = !prevChecked
 
-            return newValue && newValue;
+            return newValue;
         });
     };
 
