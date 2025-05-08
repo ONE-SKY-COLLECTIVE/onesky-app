@@ -1,10 +1,9 @@
 import { useRouter } from "expo-router";
+import * as SecureStore from 'expo-secure-store';
 import LottieView from "lottie-react-native";
 import { useEffect, useRef, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as SecureStore from 'expo-secure-store';
-
 
 import Completion from '../components/Completion';
 import ProgressBar from '../components/ProgressBar';
@@ -20,20 +19,10 @@ const Meal = () => {
     const [checked, setChecked] = useState<boolean>(false);
     const [exitWithoutMealLog, setExitWithoutMealLog] = useState<boolean>(false);
 
-
     const dailyGoal = 3;
-    const router= useRouter();
+    const router = useRouter();
 
     useEffect(() => {
-        // const removeRemindMeItem = async () => {
-        //     try {
-        //       await SecureStore.deleteItemAsync('remindMeMealLog');
-        //       console.log('Value removed from SecureStore');
-        //     } catch (error) {
-        //       console.error('Error removing value from SecureStore:', error);
-        //     }
-        //   };
-        // removeRemindMeItem();
         const checkRemindMeMealLog = () => {
             try {
                 setRemindMe(!!SecureStore.getItem('remindMeMealLog'));
@@ -205,7 +194,6 @@ const Meal = () => {
                 </>
             )}
 
-
             {confirm && (remindMeMealLog || remindMe) && (
                 <>
                     <Image resizeMode="contain" source={selectedMealId ? mealImages[selectedMealId] : undefined} className="w-3/5 mx-auto"/>
@@ -291,6 +279,5 @@ const styles = StyleSheet.create({
         zIndex: -1000
     }
   });
-
 
 export default Meal
