@@ -9,8 +9,8 @@ export default function Homepage() {
     // TODO: Complete commented out activities, replace id with page name for routing
     const activities = [
         { id: 'Quiz', title: 'Quiz', inactive: false },
-        // { id: '2', title: 'Log your meal', inactive: true },
         { id: 'Waterbottle', title: 'Water refill', inactive: false },
+        { id: 'Meal', title: 'Log your meal', inactive: false },
         // { id: '3', title: 'View to plant', inactive: true },
         // { id: '4', title: 'Steps', inactive: true },
         { id: 'Activities', title: 'View more...', inactive: false },
@@ -33,11 +33,11 @@ export default function Homepage() {
           height: 20,
         },
       });
-    
+
     // Temporary streak and points until we get API
     const streak = 10;
     const points = '3,363';
-  
+
   return (
     <View className="home-page" >
         <SafeAreaView edges={["top"]}>
@@ -58,18 +58,18 @@ export default function Homepage() {
                 </View>
                 <View className="main-content">
                     <View className="content-switch">
-                        <TouchableOpacity onPress={() => setContentSelect(0)} 
-                                          className="switch-button" 
-                                          style={{backgroundColor: 
+                        <TouchableOpacity onPress={() => setContentSelect(0)}
+                                          className="switch-button"
+                                          style={{backgroundColor:
                                                     contentSelect === 0 ? '#A1CE3F' : undefined
                                           }}>
                             <Text className={`text-[14px] ${contentSelect === 0 && 'font-semibold'}`}>
                                 Today's Activities
                             </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => setContentSelect(1)} 
-                                          className="switch-button" 
-                                          style={{backgroundColor: 
+                        <TouchableOpacity onPress={() => setContentSelect(1)}
+                                          className="switch-button"
+                                          style={{backgroundColor:
                                                     contentSelect === 1 ? '#A1CE3F' : undefined
                                           }}>
                             <Text className={`text-[14px] ${contentSelect === 0 && 'font-semibold'}`}>

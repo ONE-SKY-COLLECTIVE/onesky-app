@@ -8,7 +8,7 @@ const Activities = () => {
 
     const activities = [
         { id: 'Quiz', title: 'Quiz', inactive: false },
-        { id: '2', title: 'Log your meal', inactive: true },
+        { id: 'Meal', title: 'Log your meal', inactive: false },
         { id: 'Waterbottle', title: 'Water refill', inactive: false },
         { id: '3', title: 'View to plant', inactive: true },
         { id: '5', title: 'Switch-off', inactive: true },
@@ -43,7 +43,7 @@ const Activities = () => {
                 </View>
             </SafeAreaView>
         </View>
-        
+
     )
 }
 

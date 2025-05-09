@@ -68,9 +68,9 @@
   }
 }
 
-.sora {
+/* .sora {
   font-family: 'Sora';
-}
+} */
 
 .activity{
   background-color: #9DE5F2;
@@ -116,7 +116,7 @@
 
 .fit-width {
   width: fit-content;
-} 
+}
 
 .main-content{
   background-color: #FAFAFA;
@@ -215,6 +215,17 @@
   align-items: center;
 }
 
+.meals {
+  @apply flex justify-center items-start h-screen w-screen;
+}
+
+.meals-card {
+  @apply  flex-1 flex-col justify-center items-center rounded-xl w-full h-full border border-[#D9EBB2]
+}
+
+.meals-radio {
+  @apply absolute left-4 top-4 size-4 rounded-full
+}
 
 .green-600{
   color: #81A532
