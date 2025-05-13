@@ -1,118 +1,9 @@
-import { Link } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Animated, Button, Dimensions, Easing, Image, Pressable, Text, TextInput, View } from "react-native";
-
-
-import type { RouterOutputs } from "~/utils/api";
-import { api } from "~/utils/api";
-import { useSignIn, useSignOut, useUser } from "~/utils/auth";
+import { Animated, Dimensions, Easing, Image, View } from "react-native";
+import * as SecureStore from "expo-secure-store";
 import Onboarding from "./pages/Onboarding";
+import Homepage from "./pages/Homepage";
 
-function PostCard(props: {
-  post: RouterOutputs["post"]["all"][number];
-  onDelete: () => void;
-}) {
-  return (
-    <View className="flex flex-row rounded-lg bg-muted p-4">
-      <View className="flex-grow">
-        <Link
-          asChild
-          href={{
-            pathname: "/post/[id]",
-            params: { id: props.post.id },
-          }}
-        >
-          <Pressable className="">
-            <Text className="text-xl font-semibold text-primary">
-              {props.post.title}
-            </Text>
-            <Text className="mt-2 text-foreground">{props.post.content}</Text>
-          </Pressable>
-        </Link>
-      </View>
-      <Pressable onPress={props.onDelete}>
-        <Text className="font-bold uppercase text-primary">Delete</Text>
-      </Pressable>
-    </View>
-  );
-}
-
-function CreatePost() {
-  const utils = api.useUtils();
-
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
-  const { mutate, error } = api.post.create.useMutation({
-    async onSuccess() {
-      setTitle("");
-      setContent("");
-      await utils.post.all.invalidate();
-    },
-  });
-
-  return (
-    <View className="mt-4 flex gap-2">
-      <TextInput
-        className="items-center rounded-md border border-input bg-background px-3 text-lg leading-[1.25] text-foreground"
-        value={title}
-        onChangeText={setTitle}
-        placeholder="Title"
-      />
-      {error?.data?.zodError?.fieldErrors.title && (
-        <Text className="mb-2 text-destructive">
-          {error.data.zodError.fieldErrors.title}
-        </Text>
-      )}
-      <TextInput
-        className="items-center rounded-md border border-input bg-background px-3 text-lg leading-[1.25] text-foreground"
-        value={content}
-        onChangeText={setContent}
-        placeholder="Content"
-      />
-      {error?.data?.zodError?.fieldErrors.content && (
-        <Text className="mb-2 text-destructive">
-          {error.data.zodError.fieldErrors.content}
-        </Text>
-      )}
-      <Pressable
-        className="flex items-center rounded bg-primary p-2"
-        onPress={() => {
-          mutate({
-            title,
-            content,
-          });
-        }}
-      >
-        <Text className="text-foreground">Create</Text>
-      </Pressable>
-      {error?.data?.code === "UNAUTHORIZED" && (
-        <Text className="mt-2 text-destructive">
-          You need to be logged in to create a post
-        </Text>
-      )}
-    </View>
-  );
-}
-
-function MobileAuth() {
-  const user = useUser();
-  const signIn = useSignIn();
-  const signOut = useSignOut();
-
-  return (
-    <View>
-      <Text className="pb-2 text-center text-xl font-semibold text-white">
-        {user?.name ?? "Not logged in"}
-      </Text>
-      <Button
-        onPress={() => (user ? signOut() : signIn())}
-        title={user ? "Sign Out" : "Sign In With Discord"}
-        color={"#5B65E9"}
-      />
-    </View>
-  );
-}
 
 const SplashScreen = () => {
   const { width } = Dimensions.get("window");
@@ -215,23 +106,28 @@ const SplashScreen = () => {
   )
 }
 
-
-
 export default function Index() {
-
-  const utils = api.useUtils();
-
-  const postQuery = api.post.all.useQuery();
-
-  const deletePostMutation = api.post.delete.useMutation({
-    onSettled: () => utils.post.all.invalidate(),
-  });
-
   const [isSplashVisible, setIsSplashVisible] = useState(true);
+  const [hasLaunched, setHasLaunched] = useState<boolean | null>(null);
   useEffect(() => {
-    setTimeout(() => {
-        setIsSplashVisible(false);
-    }, 8000);
+    const initialize = async () => {
+      await new Promise((res) => setTimeout(res, 8000));
+
+      const launchStatus = await SecureStore.getItemAsync("hasLaunched");
+      if (launchStatus === null) {
+        await SecureStore.setItemAsync("hasLaunched", "true");
+        setHasLaunched(true);
+      } else {
+        setHasLaunched(false);
+      }
+      setIsSplashVisible(false);
+    };
+    initialize();
   }, []);
-  return isSplashVisible ? <SplashScreen /> : <Onboarding />;
+
+  if (isSplashVisible || hasLaunched === null) {
+    return <SplashScreen />;
+  }
+
+  return hasLaunched ? <Onboarding /> : <Homepage />;
 }
