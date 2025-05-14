@@ -3,9 +3,18 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import ActivityBox from "../components/ActivityBox";
 import NavBar from "../components/NavBar";
 import { useState } from "react";
+import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
+import { inAppWallet } from "thirdweb/wallets";
+import { createThirdwebClient } from "thirdweb";
 
 export default function Homepage() {
     const [contentSelect, setContentSelect] = useState(0);
+    const client = createThirdwebClient({ clientId: '888db09ec08aafcce2a8dc8f324b5c60' });
+const wallets = [
+  inAppWallet({
+    auth: { options: ["email", "passkey", "google", "apple", "discord"] },
+  }),
+];
     // TODO: Complete commented out activities, replace id with page name for routing
     const activities = [
         { id: 'Quiz', title: 'Quiz', inactive: false },
@@ -55,6 +64,9 @@ export default function Homepage() {
                 <View style={styles.title} className="ml-8 mt-10">
                     <Text className="mb-3 text-13">Hello John!</Text>
                     <Text className="title">What would you like to do today?</Text>
+                    <ThirdwebProvider>
+      <ConnectButton client={client} wallets={wallets} />
+    </ThirdwebProvider>
                 </View>
                 <View className="main-content">
                     <View className="content-switch">
