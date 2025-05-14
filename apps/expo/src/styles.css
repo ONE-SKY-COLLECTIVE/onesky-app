@@ -3,23 +3,22 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Sora';
-  src: url('../assets/fonts/Sora.ttf') format('truetype');
+  font-family: "Sora";
+  src: url("../assets/fonts/Sora.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: 'Raleway';
-  src: url('../assets/fonts/Raleway.ttf') format('truetype');
+  font-family: "Raleway";
+  src: url("../assets/fonts/Raleway.ttf") format("truetype");
 }
 
 .raleway {
-  font-family: 'Raleway';
+  font-family: "Raleway";
 }
 
 .sora {
-  font-family: 'Sora';
+  font-family: "Sora";
 }
-
 
 :root {
   --background: 0 0% 100%;
@@ -69,40 +68,39 @@
 }
 
 .sora {
-  font-family: 'Sora';
+  font-family: "Sora";
 }
 
-.activity{
-  background-color: #9DE5F2;
+.activity {
+  background-color: #9de5f2;
 }
 
-.home-page{
+.home-page {
   height: 100vh;
-  background-color: #9DE5F2;
+  background-color: #9de5f2;
 }
 
-.title{
+.title {
   font-size: 25px;
   text-align: left;
   font-weight: bold;
 }
 
-.flex{
+.flex {
   display: flex;
   flex-direction: row;
 }
 
-.flex-v{
+.flex-v {
   display: flex;
   flex-direction: column;
 }
 
-.justify-between{
+.justify-between {
   justify-content: space-between;
 }
 
-
-.text-13{
+.text-13 {
   font-size: 13px;
 }
 
@@ -116,10 +114,10 @@
 
 .fit-width {
   width: fit-content;
-} 
+}
 
-.main-content{
-  background-color: #FAFAFA;
+.main-content {
+  background-color: #fafafa;
   /* flex-grow: 1; */
   border-top-right-radius: 40px;
   border-top-left-radius: 40px;
@@ -130,16 +128,16 @@
 }
 
 .activity-box {
-  background-color: #D9EBB2;
+  background-color: #d9ebb2;
   height: 139px;
   width: 48%;
   border-radius: 10px;
 }
 
-.header{
+.header {
   width: 100vw;
   height: 12vh;
-  background-color: #D8F5FA;
+  background-color: #d8f5fa;
   border-radius: 35;
   display: flex;
   justify-content: flex-end;
@@ -148,17 +146,17 @@
   box-sizing: border-box;
 }
 
-.dashboard-header{
+.dashboard-header {
   width: 100vw;
   height: 14vh;
-  background-color: #C4EFF7;
+  background-color: #c4eff7;
   border-radius: 35;
   justify-content: flex-end;
   padding: 5%;
 }
 
 .waterbottle-page {
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -175,15 +173,15 @@
 .waterbottle-text {
   text-align: center;
   font-size: 22px;
-  font-family: 'Sora';
+  font-family: "Sora";
   font-weight: bold;
 }
 
-.refill-div{
-  z-index: 1000;;
+.refill-div {
+  z-index: 1000;
   position: absolute;
   bottom: 0;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   width: 100%;
   height: fit-content;
   display: flex;
@@ -196,10 +194,10 @@
   padding-bottom: 10%;
 }
 
-.refill-div-confirm{
-  background-color: #ECF5D9;
+.refill-div-confirm {
+  background-color: #ecf5d9;
 }
-.refill-animation-div{
+.refill-animation-div {
   height: 50vh;
   width: fit-content;
   align-items: center;
@@ -215,9 +213,8 @@
   align-items: center;
 }
 
-
-.green-600{
-  color: #81A532
+.green-600 {
+  color: #81a532;
 }
 
 .gray-800 {
@@ -226,40 +223,39 @@
 }
 
 .yellow-bg-300 {
-  background-color: #F5D7A8;
+  background-color: #f5d7a8;
 }
 
-
 .green-bg-50 {
-  background-color: #F6FAEC,
+  background-color: #f6faec;
 }
 
 .green-bg-100 {
-  background-color: #ECF5D9;
+  background-color: #ecf5d9;
 }
 
 .green-bg-200 {
-  background-color: #D9EBB2;
+  background-color: #d9ebb2;
 }
 
 .blue-bg-300 {
-  background-color: #C4EFF7;
+  background-color: #c4eff7;
 }
 
-.yellow-bg-500{
-  background-color: #EFBD6E;
+.yellow-bg-500 {
+  background-color: #efbd6e;
 }
 
 .white-bg {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 .green-bg-500 {
-  background-color: #A1CE3F;
+  background-color: #a1ce3f;
 }
 
-.disabled-bg{
-  background-color: #E7E5E4;
+.disabled-bg {
+  background-color: #e7e5e4;
 }
 
 .align-self-center {
@@ -275,13 +271,13 @@
 }
 
 .navbar {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   width: 100%;
   height: 9%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  border-top: #D9EBB2 1px solid;
+  border-top: #d9ebb2 1px solid;
   position: absolute;
   bottom: 0%;
   padding-top: 0;
@@ -293,7 +289,7 @@
 
 .content-switch {
   width: 100%;
-  background-color: #F6FAEC;
+  background-color: #f6faec;
   border-color: "#D9EBB2";
   border-width: 1;
   border-style: "solid";
@@ -312,8 +308,6 @@
   border-radius: 8px;
 }
 
-
-
 .entire-screen {
   height: 100%;
   width: 100%;
@@ -323,7 +317,7 @@
   position: absolute;
   display: flex;
   flex-direction: row;
-  background-color: #B1EAF5;
+  background-color: #b1eaf5;
   border-color: #7eb7c2;
   border-width: 1;
   border-radius: 20;
@@ -334,31 +328,29 @@
 
 .activity-card-div {
   padding: 20;
-  background-color: '#F6FAEC';
-  border-color: '#D9EBB2';
+  background-color: "#F6FAEC";
+  border-color: "#D9EBB2";
   border-width: 1;
   border-radius: 10;
   margin-inline: 1%;
-  width: '48%';
+  width: "48%";
   height: 139;
   position: relative;
 }
 
 .progress-bar {
   border-radius: 9999;
-  background-color: #E5E5E5;
+  background-color: #e5e5e5;
   height: 7px;
   width: 85%;
   margin-top: 6px;
 }
 
-.activities-page{
+.activities-page {
   padding-top: 0%;
   padding: 5%;
   padding-bottom: 0%;
 }
-
-
 
 .navbar-text {
   bottom: -12px;
@@ -367,19 +359,19 @@
 }
 
 .quiz-progress {
-  background-color: #F7F7F8;
+  background-color: #f7f7f8;
   width: 40px;
   height: 10px;
 }
 
 .quiz-progress-active {
-  background-color: #A1CE3F;
+  background-color: #a1ce3f;
   width: 40px;
   height: 15px;
 }
 
 .quiz-option {
-  border-color: #E7E5E4;
+  border-color: #e7e5e4;
   border-radius: 8px;
   border-width: 1.3;
   width: 100%;
@@ -387,8 +379,7 @@
   margin-bottom: 10px;
 }
 
-
-.s{
+.s {
   justify-self: flex-end;
 }
 
@@ -425,22 +416,72 @@
 
 .navbar-images {
   height: 25px;
-  width: 25px
+  width: 25px;
 }
 
-.stat-images{
+.stat-images {
   height: 30px;
   width: 30px;
 }
 
-.border-1{
+.border-1 {
   border-width: 1px;
-  border-color: #D9EBB2;
+  border-color: #d9ebb2;
   border-radius: 8px;
 }
 
-.border-2{
+.border-2 {
   border-width: 2px;
-  border-color: #E8EAEB;
+  border-color: #e8eaeb;
   border-radius: 8px;
+}
+
+/* Vampire energy */
+
+.appliances {
+  height: 100vh;
+}
+
+.socket-image {
+  width: 187px;
+  height: 280px;
+  padding-top: 38px;
+}
+
+.vamp-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  gap: 12px;
+}
+
+.vamp-list > text {
+  line-height: 18px;
+}
+
+.appliance-header {
+  width: 100vw;
+  height: 14vh;
+  /* background-color: #c4eff7; */
+  border-radius: 35;
+  justify-content: flex-end;
+  padding: 5%;
+}
+
+.item-appliance{
+  width: 165px;
+  height: 180px;
+  border: 1px solid ;
+  border-color: #A1CE3F;
+  border-radius: 12px;
+}
+
+.item-appliance-selected{
+  width: 165px;
+  height: 180px;
+  border: 1px solid ;
+  border-color: #A1CE3F;
+  border-radius: 12px;
+  background-color: #D9EBB2;
 }
