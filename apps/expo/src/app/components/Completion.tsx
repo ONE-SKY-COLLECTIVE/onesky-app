@@ -6,7 +6,7 @@ const Completion = ({points, activityName}: {points: number, activityName: strin
     return (
         <SafeAreaView className=" pt-4 flex-v h-full green-bg-50" edges={["top"]}>
             <TouchableOpacity className="px-5" onPress={() => router.push("/pages/Homepage")}>
-                <Image resizeMode="contain" source={require("../../../assets/icons/x-button.png")} />
+                <Image resizeMode="contain" className="h-[40px] w-[40px]" source={require("../../../assets/icons/x-button.png")} />
             </TouchableOpacity>
             <View className="flex-v justify-center flex-grow pb-20">
                 <Text className="raleway text-[22px] font-bold text-center">
