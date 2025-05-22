@@ -111,6 +111,8 @@ export default function Index() {
   const [hasLaunched, setHasLaunched] = useState<boolean | null>(null);
   useEffect(() => {
     const initialize = async () => {
+      // Include this line of code to see how a first-time user will see the onboarding
+      // await SecureStore.deleteItemAsync("hasLaunched");
       await new Promise((res) => setTimeout(res, 8000));
 
       const launchStatus = await SecureStore.getItemAsync("hasLaunched");
