@@ -254,3 +254,5 @@ Deploying your Expo application works slightly differently compared to Next.js o
 The stack originates from [create-t3-app](https://github.com/t3-oss/create-t3-app).
 
 A [blog post](https://jumr.dev/blog/t3-turbo) where I wrote how to migrate a T3 app into this.
+
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/ONE-SKY-COLLECTIVE/build?utm_source=oss&utm_medium=github&utm_campaign=ONE-SKY-COLLECTIVE%2Fbuild&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
